@@ -23,19 +23,34 @@ namespace Redmine.Net.Api.JSonConverters
 {
     internal class TimeEntryActivityConverter : JavaScriptConverter
     {
-        public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
+        public override IEnumerable<Type> SupportedTypes
+        {
+            get { return new List<Type>(new[] {typeof (TimeEntryActivity)}); }
+        }
+
+        public override object Deserialize(
+            IDictionary<string, object> dictionary,
+            Type type,
+            JavaScriptSerializer serializer)
         {
             if (dictionary != null)
             {
-                var timeEntryActivity = new TimeEntryActivity { Id = dictionary.GetValue<int>("id"), Name = dictionary.GetValue<string>("name"), IsDefault = dictionary.GetValue<bool>("is_default") };
+                var timeEntryActivity = new TimeEntryActivity
+                {
+                    Id = dictionary.GetValue<int>("id"),
+                    Name = dictionary.GetValue<string>("name"),
+                    IsDefault = dictionary.GetValue<bool>("is_default")
+                };
                 return timeEntryActivity;
             }
-
             return null;
         }
 
-        public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer) { return null; }
-
-        public override IEnumerable<Type> SupportedTypes { get { return new List<Type>(new[] { typeof(TimeEntryActivity) }); } }
+        public override IDictionary<string, object> Serialize(
+            object obj,
+            JavaScriptSerializer serializer)
+        {
+            return null;
+        }
     }
 }

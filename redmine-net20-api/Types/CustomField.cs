@@ -158,7 +158,8 @@ namespace Redmine.Net.Api.Types
                         PossibleValues =
                             reader
                                 .ReadElementContentAsCollection<CustomFieldPossibleValue>(
-                                    );
+                                    
+                                );
                         break;
                     default:
                         reader.Read();

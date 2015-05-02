@@ -26,12 +26,14 @@ namespace Redmine.Net.Api.JSonConverters
     {
         #region Overrides of JavaScriptConverter
 
-        public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
+        public override object Deserialize(
+            IDictionary<string, object> dictionary,
+            Type type,
+            JavaScriptSerializer serializer)
         {
             if (dictionary != null)
             {
                 var version = new Version();
-
                 version.Id = dictionary.GetValue<int>("id");
                 version.Description = dictionary.GetValue<string>("description");
                 version.Name = dictionary.GetValue<string>("name");
@@ -41,20 +43,20 @@ namespace Redmine.Net.Api.JSonConverters
                 version.Project = dictionary.GetValueAsIdentifiableName("project");
                 version.Sharing = dictionary.GetValue<VersionSharing>("sharing");
                 version.Status = dictionary.GetValue<VersionStatus>("status");
-                version.CustomFields = dictionary.GetValueAsCollection<IssueCustomField>("custom_fields");
-
+                version.CustomFields =
+                    dictionary.GetValueAsCollection<IssueCustomField>("custom_fields");
                 return version;
             }
-
             return null;
         }
 
-        public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
+        public override IDictionary<string, object> Serialize(
+            object obj,
+            JavaScriptSerializer serializer)
         {
             var entity = obj as Version;
             var root = new Dictionary<string, object>();
             var result = new Dictionary<string, object>();
-
             if (entity != null)
             {
                 result.Add("name", entity.Name);
@@ -62,15 +64,16 @@ namespace Redmine.Net.Api.JSonConverters
                 result.Add("sharing", entity.Sharing.ToString());
                 result.Add("description", entity.Description);
                 result.WriteIfNotDefaultOrNull(entity.DueDate, "due_date");
-
                 root["version"] = result;
                 return root;
             }
-
             return result;
         }
 
-        public override IEnumerable<Type> SupportedTypes { get { return new List<Type>(new[] { typeof(Version) }); } }
+        public override IEnumerable<Type> SupportedTypes
+        {
+            get { return new List<Type>(new[] {typeof (Version)}); }
+        }
 
         #endregion
     }

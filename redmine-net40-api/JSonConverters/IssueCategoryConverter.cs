@@ -25,43 +25,46 @@ namespace Redmine.Net.Api.JSonConverters
     {
         #region Overrides of JavaScriptConverter
 
-        public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
+        public override object Deserialize(
+            IDictionary<string, object> dictionary,
+            Type type,
+            JavaScriptSerializer serializer)
         {
             if (dictionary != null)
             {
                 var issueCategory = new IssueCategory();
-
                 issueCategory.Id = dictionary.GetValue<int>("id");
                 issueCategory.Project = dictionary.GetValueAsIdentifiableName("project");
-                issueCategory.AsignTo = dictionary.GetValueAsIdentifiableName("assigned_to");
+                issueCategory.AsignTo =
+                    dictionary.GetValueAsIdentifiableName("assigned_to");
                 issueCategory.Name = dictionary.GetValue<string>("name");
-
                 return issueCategory;
             }
-
             return null;
         }
 
-        public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
+        public override IDictionary<string, object> Serialize(
+            object obj,
+            JavaScriptSerializer serializer)
         {
             var entity = obj as IssueCategory;
             var root = new Dictionary<string, object>();
             var result = new Dictionary<string, object>();
-
             if (entity != null)
             {
                 result.Add("name", entity.Name);
                 result.WriteIdIfNotNull(entity.Project, "project_id");
                 result.WriteIdIfNotNull(entity.AsignTo, "assigned_to_id");
-
                 root["issue_category"] = result;
                 return root;
             }
-
             return result;
         }
 
-        public override IEnumerable<Type> SupportedTypes { get { return new List<Type>(new[] { typeof(IssueCategory) }); } }
+        public override IEnumerable<Type> SupportedTypes
+        {
+            get { return new List<Type>(new[] {typeof (IssueCategory)}); }
+        }
 
         #endregion
     }

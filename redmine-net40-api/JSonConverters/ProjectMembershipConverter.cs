@@ -25,43 +25,48 @@ namespace Redmine.Net.Api.JSonConverters
     {
         #region Overrides of JavaScriptConverter
 
-        public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
+        public override object Deserialize(
+            IDictionary<string, object> dictionary,
+            Type type,
+            JavaScriptSerializer serializer)
         {
             if (dictionary != null)
             {
                 var projectMembership = new ProjectMembership();
-
                 projectMembership.Id = dictionary.GetValue<int>("id");
                 projectMembership.Group = dictionary.GetValueAsIdentifiableName("group");
-                projectMembership.Project = dictionary.GetValueAsIdentifiableName("project");
-                projectMembership.Roles = dictionary.GetValueAsCollection<MembershipRole>("roles");
+                projectMembership.Project =
+                    dictionary.GetValueAsIdentifiableName("project");
+                projectMembership.Roles =
+                    dictionary.GetValueAsCollection<MembershipRole>("roles");
                 projectMembership.User = dictionary.GetValueAsIdentifiableName("user");
-
                 return projectMembership;
             }
             return null;
         }
 
-        public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
+        public override IDictionary<string, object> Serialize(
+            object obj,
+            JavaScriptSerializer serializer)
         {
             var entity = obj as ProjectMembership;
             var root = new Dictionary<string, object>();
             var result = new Dictionary<string, object>();
-
             if (entity != null)
             {
                 if (entity.User != null)
                     result.Add("user_id", entity.User.Id);
                 result.Add("role_ids", entity.Roles.ToArray());
-
                 root["membership"] = result;
                 return root;
             }
-
             return result;
         }
 
-        public override IEnumerable<Type> SupportedTypes { get { return new List<Type>(new[] { typeof(ProjectMembership) }); } }
+        public override IEnumerable<Type> SupportedTypes
+        {
+            get { return new List<Type>(new[] {typeof (ProjectMembership)}); }
+        }
 
         #endregion
     }

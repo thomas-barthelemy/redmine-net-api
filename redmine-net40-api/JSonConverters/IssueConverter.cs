@@ -27,12 +27,14 @@ namespace Redmine.Net.Api.JSonConverters
     {
         #region Overrides of JavaScriptConverter
 
-        public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
+        public override object Deserialize(
+            IDictionary<string, object> dictionary,
+            Type type,
+            JavaScriptSerializer serializer)
         {
             if (dictionary != null)
             {
                 var issue = new Issue();
-
                 issue.Id = dictionary.GetValue<int>("id");
                 issue.Description = dictionary.GetValue<string>("description");
                 issue.Project = dictionary.GetValueAsIdentifiableName("project");
@@ -45,7 +47,8 @@ namespace Redmine.Net.Api.JSonConverters
                 issue.Author = dictionary.GetValueAsIdentifiableName("author");
                 issue.AssignedTo = dictionary.GetValueAsIdentifiableName("assigned_to");
                 issue.Category = dictionary.GetValueAsIdentifiableName("category");
-                issue.FixedVersion = dictionary.GetValueAsIdentifiableName("fixed_version");
+                issue.FixedVersion = dictionary.GetValueAsIdentifiableName(
+                    "fixed_version");
                 issue.Subject = dictionary.GetValue<string>("subject");
                 issue.Notes = dictionary.GetValue<string>("notes");
                 issue.StartDate = dictionary.GetValue<DateTime?>("start_date");
@@ -53,26 +56,29 @@ namespace Redmine.Net.Api.JSonConverters
                 issue.DoneRatio = dictionary.GetValue<float>("done_ratio");
                 issue.EstimatedHours = dictionary.GetValue<float>("estimated_hours");
                 issue.ParentIssue = dictionary.GetValueAsIdentifiableName("parent");
-
-                issue.CustomFields = dictionary.GetValueAsCollection<IssueCustomField>("custom_fields");
-                issue.Attachments = dictionary.GetValueAsCollection<Attachment>("attachments");
-                issue.Relations = dictionary.GetValueAsCollection<IssueRelation>("relations");
+                issue.CustomFields =
+                    dictionary.GetValueAsCollection<IssueCustomField>("custom_fields");
+                issue.Attachments =
+                    dictionary.GetValueAsCollection<Attachment>("attachments");
+                issue.Relations =
+                    dictionary.GetValueAsCollection<IssueRelation>("relations");
                 issue.Journals = dictionary.GetValueAsCollection<Journal>("journals");
-                issue.Changesets = dictionary.GetValueAsCollection<ChangeSet>("changesets");
+                issue.Changesets = dictionary.GetValueAsCollection<ChangeSet>(
+                    "changesets");
                 issue.Watchers = dictionary.GetValueAsCollection<Watcher>("watchers");
                 issue.Children = dictionary.GetValueAsCollection<IssueChild>("children");
                 return issue;
             }
-
             return null;
         }
 
-        public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
+        public override IDictionary<string, object> Serialize(
+            object obj,
+            JavaScriptSerializer serializer)
         {
             var entity = obj as Issue;
             var root = new Dictionary<string, object>();
             var result = new Dictionary<string, object>();
-
             if (entity != null)
             {
                 result.Add("subject", entity.Subject);
@@ -85,44 +91,49 @@ namespace Redmine.Net.Api.JSonConverters
                 result.WriteIdIfNotNull(entity.Tracker, "tracker_id");
                 result.WriteIdIfNotNull(entity.AssignedTo, "assigned_to_id");
                 result.WriteIdIfNotNull(entity.FixedVersion, "fixed_version_id");
-               // result.WriteIdIfNotNull(entity.ParentIssue, "parent_issue_id");
+                // result.WriteIdIfNotNull(entity.ParentIssue, "parent_issue_id");
                 result.WriteIfNotDefaultOrNull(entity.EstimatedHours, "estimated_hours");
-
-                if(entity.ParentIssue == null)
+                if (entity.ParentIssue == null)
                     result.Add("parent_issue_id", null);
                 else
                 {
                     result.Add("parent_issue_id", entity.ParentIssue.Id);
                 }
                 if (entity.StartDate != null)
-                    result.Add("start_date", entity.StartDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
+                    result.Add(
+                        "start_date",
+                        entity.StartDate.Value.ToString(
+                            "yyyy-MM-dd",
+                            CultureInfo.InvariantCulture));
                 if (entity.DueDate != null)
-                    result.Add("due_date", entity.DueDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
-
+                    result.Add(
+                        "due_date",
+                        entity.DueDate.Value.ToString(
+                            "yyyy-MM-dd",
+                            CultureInfo.InvariantCulture));
                 result.WriteIfNotDefaultOrNull(entity.DoneRatio, "done_ratio");
-
-                if (entity.Uploads != null) result.Add("uploads", entity.Uploads.ToArray());
-
+                if (entity.Uploads != null)
+                    result.Add("uploads", entity.Uploads.ToArray());
                 if (entity.CustomFields != null)
                 {
-                    serializer.RegisterConverters(new[] { new IssueCustomFieldConverter() });
+                    serializer.RegisterConverters(new[] {new IssueCustomFieldConverter()});
                     result.Add("custom_fields", entity.CustomFields.ToArray());
                 }
-
                 if (entity.Watchers != null)
                 {
-                    serializer.RegisterConverters(new[] { new WatcherConverter()  });
+                    serializer.RegisterConverters(new[] {new WatcherConverter()});
                     result.Add("watcher_user_ids", entity.Watchers.ToArray());
                 }
-
                 root["issue"] = result;
                 return root;
             }
-
             return result;
         }
 
-        public override IEnumerable<Type> SupportedTypes { get { return new List<Type>(new[] { typeof(Issue) }); } }
+        public override IEnumerable<Type> SupportedTypes
+        {
+            get { return new List<Type>(new[] {typeof (Issue)}); }
+        }
 
         #endregion
     }

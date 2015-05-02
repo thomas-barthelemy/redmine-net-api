@@ -25,12 +25,14 @@ namespace Redmine.Net.Api.JSonConverters
     {
         #region Overrides of JavaScriptConverter
 
-        public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
+        public override object Deserialize(
+            IDictionary<string, object> dictionary,
+            Type type,
+            JavaScriptSerializer serializer)
         {
             if (dictionary != null)
             {
                 var attachment = new Attachment();
-
                 attachment.Id = dictionary.GetValue<int>("id");
                 attachment.Description = dictionary.GetValue<string>("description");
                 attachment.Author = dictionary.GetValueAsIdentifiableName("author");
@@ -39,16 +41,22 @@ namespace Redmine.Net.Api.JSonConverters
                 attachment.CreatedOn = dictionary.GetValue<DateTime?>("created_on");
                 attachment.FileName = dictionary.GetValue<string>("filename");
                 attachment.FileSize = dictionary.GetValue<int>("filesize");
-
                 return attachment;
             }
-
             return null;
         }
 
-        public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer) { return null; }
+        public override IDictionary<string, object> Serialize(
+            object obj,
+            JavaScriptSerializer serializer)
+        {
+            return null;
+        }
 
-        public override IEnumerable<Type> SupportedTypes { get { return new List<Type>(new[] { typeof(Attachment) }); } }
+        public override IEnumerable<Type> SupportedTypes
+        {
+            get { return new List<Type>(new[] {typeof (Attachment)}); }
+        }
 
         #endregion
     }

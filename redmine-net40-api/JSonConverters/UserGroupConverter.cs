@@ -24,7 +24,10 @@ namespace Redmine.Net.Api.JSonConverters
     {
         #region Overrides of JavaScriptConverter
 
-        public override IEnumerable<Type> SupportedTypes { get { return new List<Type>(new[] { typeof(UserGroup) }); } }
+        public override IEnumerable<Type> SupportedTypes
+        {
+            get { return new List<Type>(new[] {typeof (UserGroup)}); }
+        }
 
         #endregion
     }

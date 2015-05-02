@@ -25,45 +25,49 @@ namespace Redmine.Net.Api.JSonConverters
     {
         #region Overrides of JavaScriptConverter
 
-        public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
+        public override object Deserialize(
+            IDictionary<string, object> dictionary,
+            Type type,
+            JavaScriptSerializer serializer)
         {
             if (dictionary != null)
             {
                 var issueRelation = new IssueRelation();
-
                 issueRelation.Id = dictionary.GetValue<int>("id");
                 issueRelation.IssueId = dictionary.GetValue<int>("issue_id");
                 issueRelation.IssueToId = dictionary.GetValue<int>("issue_to_id");
-                issueRelation.Type = dictionary.GetValue<IssueRelationType>("relation_type");
+                issueRelation.Type =
+                    dictionary.GetValue<IssueRelationType>("relation_type");
                 issueRelation.Delay = dictionary.GetValue<int?>("delay");
-
                 return issueRelation;
             }
-
             return null;
         }
 
-        public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
+        public override IDictionary<string, object> Serialize(
+            object obj,
+            JavaScriptSerializer serializer)
         {
             var entity = obj as IssueRelation;
             var root = new Dictionary<string, object>();
             var result = new Dictionary<string, object>();
-
             if (entity != null)
             {
                 result.Add("issue_to_id", entity.IssueToId);
                 result.Add("relation_type", entity.Type.ToString());
-                if (entity.Type == IssueRelationType.precedes || entity.Type == IssueRelationType.follows)
+                if (entity.Type == IssueRelationType.precedes ||
+                    entity.Type == IssueRelationType.follows)
                     result.WriteIfNotDefaultOrNull(entity.Delay, "delay");
-
                 root["relation"] = result;
                 return root;
             }
-
             return result;
         }
 
-        public override IEnumerable<Type> SupportedTypes { get { return new List<Type>(new[] { typeof(IssueRelation) }); } }
+        public override IEnumerable<Type> SupportedTypes
+        {
+            get { return new List<Type>(new[] {typeof (IssueRelation)}); }
+        }
 
         #endregion
     }

@@ -25,28 +25,30 @@ namespace Redmine.Net.Api.JSonConverters
     {
         #region Overrides of JavaScriptConverter
 
-        public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
+        public override object Deserialize(
+            IDictionary<string, object> dictionary,
+            Type type,
+            JavaScriptSerializer serializer)
         {
             if (dictionary != null)
             {
                 var upload = new Upload();
-
                 upload.ContentType = dictionary.GetValue<string>("content_type");
                 upload.FileName = dictionary.GetValue<string>("filename");
                 upload.Token = dictionary.GetValue<string>("token");
                 upload.Description = dictionary.GetValue<string>("description");
                 return upload;
             }
-
             return null;
         }
 
-        public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
+        public override IDictionary<string, object> Serialize(
+            object obj,
+            JavaScriptSerializer serializer)
         {
             var entity = obj as Upload;
             var root = new Dictionary<string, object>();
             var result = new Dictionary<string, object>();
-
             if (entity != null)
             {
                 result.Add("content_type", entity.ContentType);
@@ -56,11 +58,13 @@ namespace Redmine.Net.Api.JSonConverters
                 root["upload"] = result;
                 return root;
             }
-
             return result;
         }
 
-        public override IEnumerable<Type> SupportedTypes { get { return new List<Type>(new[] { typeof(Upload) }); } }
+        public override IEnumerable<Type> SupportedTypes
+        {
+            get { return new List<Type>(new[] {typeof (Upload)}); }
+        }
 
         #endregion
     }

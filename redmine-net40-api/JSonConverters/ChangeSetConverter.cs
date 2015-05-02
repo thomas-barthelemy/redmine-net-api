@@ -25,7 +25,10 @@ namespace Redmine.Net.Api.JSonConverters
     {
         #region Overrides of JavaScriptConverter
 
-        public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
+        public override object Deserialize(
+            IDictionary<string, object> dictionary,
+            Type type,
+            JavaScriptSerializer serializer)
         {
             if (dictionary != null)
             {
@@ -36,17 +39,22 @@ namespace Redmine.Net.Api.JSonConverters
                     User = dictionary.GetValueAsIdentifiableName("user"),
                     CommittedOn = dictionary.GetValue<DateTime?>("committed_on")
                 };
-
-
                 return changeSet;
             }
-
             return null;
         }
 
-        public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer) { return null; }
+        public override IDictionary<string, object> Serialize(
+            object obj,
+            JavaScriptSerializer serializer)
+        {
+            return null;
+        }
 
-        public override IEnumerable<Type> SupportedTypes { get { return new List<Type>(new[] { typeof(ChangeSet) }); } }
+        public override IEnumerable<Type> SupportedTypes
+        {
+            get { return new List<Type>(new[] {typeof (ChangeSet)}); }
+        }
 
         #endregion
     }

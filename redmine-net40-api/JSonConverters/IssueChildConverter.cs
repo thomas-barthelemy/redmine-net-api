@@ -23,7 +23,15 @@ namespace Redmine.Net.Api.JSonConverters
 {
     internal class IssueChildConverter : JavaScriptConverter
     {
-        public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
+        public override IEnumerable<Type> SupportedTypes
+        {
+            get { return new List<Type>(new[] {typeof (IssueChild)}); }
+        }
+
+        public override object Deserialize(
+            IDictionary<string, object> dictionary,
+            Type type,
+            JavaScriptSerializer serializer)
         {
             if (dictionary != null)
             {
@@ -33,15 +41,16 @@ namespace Redmine.Net.Api.JSonConverters
                     Tracker = dictionary.GetValueAsIdentifiableName("tracker"),
                     Subject = dictionary.GetValue<string>("subject")
                 };
-                
                 return issueChild;
             }
-
             return null;
         }
 
-        public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer) { return null; }
-
-        public override IEnumerable<Type> SupportedTypes { get { return new List<Type>(new[] { typeof(IssueChild) }); } }
+        public override IDictionary<string, object> Serialize(
+            object obj,
+            JavaScriptSerializer serializer)
+        {
+            return null;
+        }
     }
 }

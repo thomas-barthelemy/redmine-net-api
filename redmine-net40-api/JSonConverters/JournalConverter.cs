@@ -25,27 +25,35 @@ namespace Redmine.Net.Api.JSonConverters
     {
         #region Overrides of JavaScriptConverter
 
-        public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
+        public override object Deserialize(
+            IDictionary<string, object> dictionary,
+            Type type,
+            JavaScriptSerializer serializer)
         {
             if (dictionary != null)
             {
                 var journal = new Journal();
-
                 journal.Id = dictionary.GetValue<int>("id");
                 journal.Notes = dictionary.GetValue<string>("notes");
                 journal.User = dictionary.GetValueAsIdentifiableName("user");
                 journal.CreatedOn = dictionary.GetValue<DateTime?>("created_on");
                 journal.Details = dictionary.GetValueAsCollection<Detail>("details");
-
                 return journal;
             }
-
             return null;
         }
 
-        public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer) { return null; }
+        public override IDictionary<string, object> Serialize(
+            object obj,
+            JavaScriptSerializer serializer)
+        {
+            return null;
+        }
 
-        public override IEnumerable<Type> SupportedTypes { get { return new List<Type>(new[] { typeof(Journal) }); } }
+        public override IEnumerable<Type> SupportedTypes
+        {
+            get { return new List<Type>(new[] {typeof (Journal)}); }
+        }
 
         #endregion
     }

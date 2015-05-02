@@ -23,37 +23,37 @@ namespace Redmine.Net.Api.JSonConverters
 {
     internal class WatcherConverter : JavaScriptConverter
     {
-        public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
+        public override IEnumerable<Type> SupportedTypes
+        {
+            get { return new List<Type>(new[] {typeof (Watcher)}); }
+        }
+
+        public override object Deserialize(
+            IDictionary<string, object> dictionary,
+            Type type,
+            JavaScriptSerializer serializer)
         {
             if (dictionary != null)
             {
                 var watcher = new Watcher();
-
                 watcher.Id = dictionary.GetValue<int>("id");
                 watcher.Name = dictionary.GetValue<string>("name");
-
                 return watcher;
             }
-
             return null;
         }
 
-        public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
+        public override IDictionary<string, object> Serialize(
+            object obj,
+            JavaScriptSerializer serializer)
         {
             var entity = obj as Watcher;
             var result = new Dictionary<string, object>();
-
             if (entity != null)
             {
                 result.Add("id", entity.Id);
             }
-
             return result;
-        }
-
-        public override IEnumerable<Type> SupportedTypes
-        {
-            get { return new List<Type>(new[] { typeof(Watcher) }); }
         }
     }
 }

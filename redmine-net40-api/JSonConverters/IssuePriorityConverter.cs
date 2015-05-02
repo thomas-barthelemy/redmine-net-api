@@ -23,24 +23,32 @@ namespace Redmine.Net.Api.JSonConverters
 {
     internal class IssuePriorityConverter : JavaScriptConverter
     {
-        public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
+        public override IEnumerable<Type> SupportedTypes
+        {
+            get { return new List<Type>(new[] {typeof (IssuePriority)}); }
+        }
+
+        public override object Deserialize(
+            IDictionary<string, object> dictionary,
+            Type type,
+            JavaScriptSerializer serializer)
         {
             if (dictionary != null)
             {
                 var issuePriority = new IssuePriority();
-
                 issuePriority.Id = dictionary.GetValue<int>("id");
                 issuePriority.Name = dictionary.GetValue<string>("name");
                 issuePriority.IsDefault = dictionary.GetValue<bool>("is_default");
-
                 return issuePriority;
             }
-
             return null;
         }
 
-        public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer) { return null; }
-
-        public override IEnumerable<Type> SupportedTypes { get { return new List<Type>(new[] { typeof(IssuePriority) }); } }
+        public override IDictionary<string, object> Serialize(
+            object obj,
+            JavaScriptSerializer serializer)
+        {
+            return null;
+        }
     }
 }

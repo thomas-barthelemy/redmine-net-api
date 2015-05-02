@@ -23,12 +23,19 @@ namespace Redmine.Net.Api.JSonConverters
 {
     internal class WikiPageConverter : JavaScriptConverter
     {
-        public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
+        public override IEnumerable<Type> SupportedTypes
+        {
+            get { return new List<Type>(new[] {typeof (WikiPage)}); }
+        }
+
+        public override object Deserialize(
+            IDictionary<string, object> dictionary,
+            Type type,
+            JavaScriptSerializer serializer)
         {
             if (dictionary != null)
             {
                 var tracker = new WikiPage();
-
                 tracker.Id = dictionary.GetValue<int>("id");
                 tracker.Author = dictionary.GetValueAsIdentifiableName("author");
                 tracker.Comments = dictionary.GetValue<string>("comments");
@@ -37,33 +44,29 @@ namespace Redmine.Net.Api.JSonConverters
                 tracker.Title = dictionary.GetValue<string>("title");
                 tracker.UpdatedOn = dictionary.GetValue<DateTime?>("updated_on");
                 tracker.Version = dictionary.GetValue<int>("version");
-                tracker.Attachments = dictionary.GetValueAsCollection<Attachment>("attachments");
-
+                tracker.Attachments =
+                    dictionary.GetValueAsCollection<Attachment>("attachments");
                 return tracker;
             }
-
             return null;
         }
 
-        public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
+        public override IDictionary<string, object> Serialize(
+            object obj,
+            JavaScriptSerializer serializer)
         {
             var entity = obj as WikiPage;
             var root = new Dictionary<string, object>();
             var result = new Dictionary<string, object>();
-
             if (entity != null)
             {
                 result.Add("text", entity.Text);
                 result.Add("comments", entity.Comments);
                 result.WriteIfNotDefaultOrNull<int>(entity.Version, "version");
-
                 root["wiki_page"] = result;
                 return root;
             }
-
             return result;
         }
-
-        public override IEnumerable<Type> SupportedTypes { get { return new List<Type>(new[] { typeof(WikiPage) }); } }
     }
 }

@@ -27,50 +27,57 @@ namespace Redmine.Net.Api.JSonConverters
     {
         #region Overrides of JavaScriptConverter
 
-        public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
+        public override object Deserialize(
+            IDictionary<string, object> dictionary,
+            Type type,
+            JavaScriptSerializer serializer)
         {
             if (dictionary != null)
             {
                 var customField = new IssueCustomField();
-
                 customField.Id = dictionary.GetValue<int>("id");
                 customField.Name = dictionary.GetValue<string>("name");
                 customField.Multiple = dictionary.GetValue<bool>("multiple");
-
                 var val = dictionary.GetValue<object>("value");
-
                 if (val != null)
                 {
-                    if (customField.Values == null) customField.Values = new List<CustomFieldValue>();
+                    if (customField.Values == null)
+                        customField.Values = new List<CustomFieldValue>();
                     var list = val as ArrayList;
                     if (list != null)
                     {
                         foreach (string value in list)
                         {
-                            customField.Values.Add(new CustomFieldValue { Info = value });
+                            customField.Values.Add(
+                                new CustomFieldValue
+                                {
+                                    Info = value
+                                });
                         }
                     }
                     else
                     {
-                        customField.Values.Add(new CustomFieldValue { Info = val as string });
+                        customField.Values.Add(
+                            new CustomFieldValue
+                            {
+                                Info = val as string
+                            });
                     }
                 }
                 return customField;
             }
-
             return null;
         }
 
-        public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
+        public override IDictionary<string, object> Serialize(
+            object obj,
+            JavaScriptSerializer serializer)
         {
             var entity = obj as IssueCustomField;
-
             var result = new Dictionary<string, object>();
-
             if (entity == null) return result;
             if (entity.Values == null) return null;
             var itemsCount = entity.Values.Count;
-
             result.Add("id", entity.Id);
             if (itemsCount > 1)
             {
@@ -80,11 +87,13 @@ namespace Redmine.Net.Api.JSonConverters
             {
                 result.Add("value", itemsCount > 0 ? entity.Values[0].Info : null);
             }
-
             return result;
         }
 
-        public override IEnumerable<Type> SupportedTypes { get { return new List<Type>(new[] { typeof(IssueCustomField) }); } }
+        public override IEnumerable<Type> SupportedTypes
+        {
+            get { return new List<Type>(new[] {typeof (IssueCustomField)}); }
+        }
 
         #endregion
     }

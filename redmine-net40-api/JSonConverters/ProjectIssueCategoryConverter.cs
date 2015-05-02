@@ -25,7 +25,10 @@ namespace Redmine.Net.Api.JSonConverters
     {
         #region Overrides of JavaScriptConverter
 
-        public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
+        public override object Deserialize(
+            IDictionary<string, object> dictionary,
+            Type type,
+            JavaScriptSerializer serializer)
         {
             if ((dictionary != null))
             {
@@ -37,17 +40,17 @@ namespace Redmine.Net.Api.JSonConverters
             return null;
         }
 
-        public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
+        public override IDictionary<string, object> Serialize(
+            object obj,
+            JavaScriptSerializer serializer)
         {
             var entity = obj as ProjectIssueCategory;
             var root = new Dictionary<string, object>();
             var result = new Dictionary<string, object>();
-
             if (entity != null)
             {
                 result.Add("id", entity.Id);
                 result.Add("name", entity.Name);
-
                 root["issue_category"] = result;
                 return root;
             }
@@ -56,7 +59,7 @@ namespace Redmine.Net.Api.JSonConverters
 
         public override IEnumerable<Type> SupportedTypes
         {
-            get { return new List<Type>(new[] { typeof(ProjectIssueCategory) }); }
+            get { return new List<Type>(new[] {typeof (ProjectIssueCategory)}); }
         }
 
         #endregion

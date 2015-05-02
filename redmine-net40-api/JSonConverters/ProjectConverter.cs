@@ -26,12 +26,14 @@ namespace Redmine.Net.Api.JSonConverters
     {
         #region Overrides of JavaScriptConverter
 
-        public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
+        public override object Deserialize(
+            IDictionary<string, object> dictionary,
+            Type type,
+            JavaScriptSerializer serializer)
         {
             if (dictionary != null)
             {
                 var project = new Project();
-
                 project.Id = dictionary.GetValue<int>("id");
                 project.Description = dictionary.GetValue<string>("description");
                 project.HomePage = dictionary.GetValue<string>("homepage");
@@ -40,23 +42,27 @@ namespace Redmine.Net.Api.JSonConverters
                 project.Status = dictionary.GetValue<ProjectStatus>("status");
                 project.CreatedOn = dictionary.GetValue<DateTime?>("created_on");
                 project.UpdatedOn = dictionary.GetValue<DateTime?>("updated_on");
-                project.Trackers = dictionary.GetValueAsCollection<ProjectTracker>("trackers");
-                project.CustomFields = dictionary.GetValueAsCollection<IssueCustomField>("custom_fields");
+                project.Trackers =
+                    dictionary.GetValueAsCollection<ProjectTracker>("trackers");
+                project.CustomFields =
+                    dictionary.GetValueAsCollection<IssueCustomField>("custom_fields");
                 project.IsPublic = dictionary.GetValue<bool>("is_public");
                 project.Parent = dictionary.GetValueAsIdentifiableName("parent");
-                project.IssueCategories = dictionary.GetValueAsCollection<ProjectIssueCategory>("issue_categories");
+                project.IssueCategories =
+                    dictionary.GetValueAsCollection<ProjectIssueCategory>(
+                        "issue_categories");
                 return project;
             }
-
             return null;
         }
 
-        public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
+        public override IDictionary<string, object> Serialize(
+            object obj,
+            JavaScriptSerializer serializer)
         {
             var entity = obj as Project;
             var root = new Dictionary<string, object>();
             var result = new Dictionary<string, object>();
-
             if (entity != null)
             {
                 result.Add("name", entity.Name);
@@ -65,24 +71,23 @@ namespace Redmine.Net.Api.JSonConverters
                 result.Add("homepage", entity.HomePage);
                 result.Add("inherit_members", entity.InheritMembers);
                 result.Add("is_public", entity.IsPublic);
-
                 if (entity.Parent != null)
                     result.Add("parent_id", entity.Parent.Id);
-                
                 if (entity.CustomFields != null)
                 {
-                    serializer.RegisterConverters(new[] { new IssueCustomFieldConverter() });
+                    serializer.RegisterConverters(new[] {new IssueCustomFieldConverter()});
                     result.Add("custom_fields", entity.CustomFields.ToArray());
                 }
-
                 root["project"] = result;
                 return root;
             }
-
             return result;
         }
 
-        public override IEnumerable<Type> SupportedTypes { get { return new List<Type>(new[] { typeof(Project) }); } }
+        public override IEnumerable<Type> SupportedTypes
+        {
+            get { return new List<Type>(new[] {typeof (Project)}); }
+        }
 
         #endregion
     }

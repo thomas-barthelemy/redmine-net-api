@@ -23,19 +23,32 @@ namespace Redmine.Net.Api.JSonConverters
 {
     internal class PermissionConverter : JavaScriptConverter
     {
-        public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
+        public override IEnumerable<Type> SupportedTypes
+        {
+            get { return new List<Type>(new[] {typeof (Permission)}); }
+        }
+
+        public override object Deserialize(
+            IDictionary<string, object> dictionary,
+            Type type,
+            JavaScriptSerializer serializer)
         {
             if (dictionary != null)
             {
-                var permission = new Permission { Info = dictionary.GetValue<string>("permission") };
+                var permission = new Permission
+                {
+                    Info = dictionary.GetValue<string>("permission")
+                };
                 return permission;
             }
-
             return null;
         }
 
-        public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer) { return null; }
-
-        public override IEnumerable<Type> SupportedTypes { get { return new List<Type>(new[] { typeof(Permission) }); } }
+        public override IDictionary<string, object> Serialize(
+            object obj,
+            JavaScriptSerializer serializer)
+        {
+            return null;
+        }
     }
 }

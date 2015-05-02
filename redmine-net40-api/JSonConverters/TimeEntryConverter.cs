@@ -26,54 +26,67 @@ namespace Redmine.Net.Api.JSonConverters
     {
         #region Overrides of JavaScriptConverter
 
-        public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
+        public override object Deserialize(
+            IDictionary<string, object> dictionary,
+            Type type,
+            JavaScriptSerializer serializer)
         {
             if (dictionary != null)
             {
                 var timeEntry = new TimeEntry();
-
                 timeEntry.Id = dictionary.GetValue<int>("id");
-                timeEntry.Activity = dictionary.GetValueAsIdentifiableName(dictionary.ContainsKey("activity") ? "activity" : "activity_id");
+                timeEntry.Activity =
+                    dictionary.GetValueAsIdentifiableName(
+                        dictionary.ContainsKey("activity") ? "activity" : "activity_id");
                 timeEntry.Comments = dictionary.GetValue<string>("comments");
                 timeEntry.Hours = dictionary.GetValue<decimal>("hours");
-                timeEntry.Issue = dictionary.GetValueAsIdentifiableName(dictionary.ContainsKey("issue") ? "issue" : "issue_id");
-                timeEntry.Project = dictionary.GetValueAsIdentifiableName(dictionary.ContainsKey("project") ? "project" : "project_id");
+                timeEntry.Issue =
+                    dictionary.GetValueAsIdentifiableName(
+                        dictionary.ContainsKey("issue") ? "issue" : "issue_id");
+                timeEntry.Project =
+                    dictionary.GetValueAsIdentifiableName(
+                        dictionary.ContainsKey("project") ? "project" : "project_id");
                 timeEntry.SpentOn = dictionary.GetValue<DateTime?>("spent_on");
                 timeEntry.User = dictionary.GetValueAsIdentifiableName("user");
-                timeEntry.CustomFields = dictionary.GetValueAsCollection<IssueCustomField>("custom_fields");
+                timeEntry.CustomFields =
+                    dictionary.GetValueAsCollection<IssueCustomField>("custom_fields");
                 timeEntry.CreatedOn = dictionary.GetValue<DateTime?>("created_on");
                 timeEntry.UpdatedOn = dictionary.GetValue<DateTime?>("updated_on");
-
                 return timeEntry;
             }
-
             return null;
         }
 
-        public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
+        public override IDictionary<string, object> Serialize(
+            object obj,
+            JavaScriptSerializer serializer)
         {
             var entity = obj as TimeEntry;
             var root = new Dictionary<string, object>();
             var result = new Dictionary<string, object>();
-
             if (entity != null)
             {
                 result.WriteIdIfNotNull(entity.Issue, "issue_id");
                 result.WriteIdIfNotNull(entity.Project, "project_id");
                 result.WriteIdIfNotNull(entity.Activity, "activity_id");
                 if (!entity.SpentOn.HasValue) entity.SpentOn = DateTime.Now;
-                result.Add("spent_on", entity.SpentOn.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
+                result.Add(
+                    "spent_on",
+                    entity.SpentOn.Value.ToString(
+                        "yyyy-MM-dd",
+                        CultureInfo.InvariantCulture));
                 result.Add("hours", entity.Hours);
                 result.Add("comments", entity.Comments);
-
                 root["time_entry"] = result;
                 return root;
             }
-
             return result;
         }
 
-        public override IEnumerable<Type> SupportedTypes { get { return new List<Type>(new[] { typeof(TimeEntry) }); } }
+        public override IEnumerable<Type> SupportedTypes
+        {
+            get { return new List<Type>(new[] {typeof (TimeEntry)}); }
+        }
 
         #endregion
     }
