@@ -290,9 +290,6 @@
       <Link>RedmineWebClient.cs</Link>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="..\redmine-net45-api\RedmineAsyncWebClient.cs">
-      <Link>RedmineAsyncWebClient.cs</Link>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
