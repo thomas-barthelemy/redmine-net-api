@@ -36,7 +36,7 @@ namespace Redmine.Net.Api
         public async Task<User> GetCurrentUserAsync(NameValueCollection parameters = null)
         {
             string uri = string.Format(REQUEST_FORMAT, host, urls[typeof(User)], CURRENT_USER_URI, mimeFormat);
-            var result = await new RedmineAsyncWebClient().DownloadStringAsync(uri);
+            var result = await new RedmineWebClient().DownloadStringTaskAsync(uri);
 
             return DeserializeResult<User>(result);
         }
@@ -47,7 +47,7 @@ namespace Redmine.Net.Api
                 ? string.Format(WIKI_PAGE_FORMAT, host, projectId, pageName, mimeFormat) 
                 : string.Format(WIKI_VERSION_FORMAT, host, projectId, pageName, version, mimeFormat);
 
-            var result = await new RedmineAsyncWebClient().DownloadStringAsync(uri);
+            var result = await new RedmineWebClient().DownloadStringTaskAsync(uri);
 
             return DeserializeResult<WikiPage>(result);
         }
@@ -128,62 +128,6 @@ namespace Redmine.Net.Api
                 wc.UploadStringAsync(new Uri(string.Format(REQUEST_FORMAT, host, urls[typeof(Group)], groupId + "/users/" + userId, mimeFormat)), DELETE, string.Empty, new AsyncToken { Method = RedmineMethod.DeleteUserFromGroup, Parameter = userId, TokenId = id });
                 return id;
             }
-        }
-
-        public async Task<List<T>> GetObjectListAsync<T>(NameValueCollection parameters)
-        {
-            if (!urls.ContainsKey(typeof(T))) return null;
-
-            //using (var wc = CreateWebClient(parameters))
-            //{
-            //    var id = Guid.NewGuid();
-            //    var type = typeof(T);
-            //    wc.DownloadStringCompleted += WcDownloadStringCompleted;
-
-            //    var asyncToken = new AsyncToken { Method = RedmineMethod.GetObjectList, ResponseType = type, TokenId = id, JsonRoot = urls[type] };
-
-            //    if (type == typeof(Version) || type == typeof(IssueCategory) || type == typeof(ProjectMembership))
-            //    {
-            //        string projectId = GetOwnerId(parameters, "project_id");
-            //        if (string.IsNullOrEmpty(projectId)) throw new RedmineException("The project id is mandatory! \nCheck if you have included the parameter project_id to parameters.");
-
-            //        wc.DownloadStringAsync(new Uri(string.Format(ENTITY_WITH_PARENT_FORMAT, host, "projects", projectId, urls[type], mimeFormat)), asyncToken);
-            //    }
-            //    else
-            //        if (type == typeof(IssueRelation))
-            //        {
-            //            string issueId = GetOwnerId(parameters, "issue_id");
-            //            if (string.IsNullOrEmpty(issueId)) throw new RedmineException("The issue id is mandatory! \nCheck if you have included the parameter issue_id to parameters");
-            //            wc.DownloadStringAsync(new Uri(string.Format(ENTITY_WITH_PARENT_FORMAT, host, "issues", issueId, urls[type], mimeFormat)), asyncToken);
-            //        }
-            //        else
-            //        {
-            //            wc.DownloadStringAsync(new Uri(string.Format(FORMAT, host, urls[type], mimeFormat)), asyncToken);
-            //        }
-            //    return id;
-            //}
-        }
-
-        /// <summary>
-        /// Gets a Redmine object. This method does not block the calling thread.
-        /// </summary>
-        /// <typeparam name="T">The type of objects to retrieve.</typeparam>
-        /// <param name="id">The id of the object.</param>
-        /// <param name="parameters">Optional filters and/or optional fetched data.</param>
-        /// <returns>Returns the Guid associated with the async request.</returns>
-        public async Task<T> GetObjectAsync<T>(string id, NameValueCollection parameters) where T : class
-        {
-            var type = typeof(T);
-
-            if (!urls.ContainsKey(type)) return default(T);
-
-            //using (var wc = CreateWebClient(parameters))
-            //{
-            //    var guid = Guid.NewGuid();
-            //    wc.DownloadStringCompleted += WcDownloadStringCompleted;
-            //    wc.DownloadStringAsync(new Uri(string.Format(REQUEST_FORMAT, host, urls[type], id, mimeFormat)), new AsyncToken { Method = RedmineMethod.GetObject, ResponseType = type, Parameter = id, TokenId = guid });
-            //    return guid;
-            //}
         }
 
         /// <summary>
