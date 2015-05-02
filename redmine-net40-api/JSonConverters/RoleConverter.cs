@@ -30,16 +30,15 @@ namespace Redmine.Net.Api.JSonConverters
             Type type,
             JavaScriptSerializer serializer)
         {
-            if (dictionary != null)
+            if (dictionary == null) return null;
+            var role = new Role
             {
-                var role = new Role();
-                role.Id = dictionary.GetValue<int>("id");
-                role.Name = dictionary.GetValue<string>("name");
-                role.Permissions =
-                    dictionary.GetValueAsCollection<Permission>("permissions");
-                return role;
-            }
-            return null;
+                Id = dictionary.GetValue<int>("id"),
+                Name = dictionary.GetValue<string>("name"),
+                Permissions =
+                    dictionary.GetValueAsCollection<Permission>("permissions")
+            };
+            return role;
         }
 
         public override IDictionary<string, object> Serialize(

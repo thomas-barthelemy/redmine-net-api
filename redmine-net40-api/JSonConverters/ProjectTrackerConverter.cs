@@ -30,14 +30,13 @@ namespace Redmine.Net.Api.JSonConverters
             Type type,
             JavaScriptSerializer serializer)
         {
-            if ((dictionary != null))
+            if ((dictionary == null)) return null;
+            var projectTracker = new ProjectTracker
             {
-                var projectTracker = new ProjectTracker();
-                projectTracker.Id = dictionary.GetValue<int>("id");
-                projectTracker.Name = dictionary.GetValue<string>("name");
-                return projectTracker;
-            }
-            return null;
+                Id = dictionary.GetValue<int>("id"),
+                Name = dictionary.GetValue<string>("name")
+            };
+            return projectTracker;
         }
 
         public override IDictionary<string, object> Serialize(

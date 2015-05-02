@@ -30,16 +30,15 @@ namespace Redmine.Net.Api.JSonConverters
             Type type,
             JavaScriptSerializer serializer)
         {
-            if (dictionary != null)
+            if (dictionary == null) return null;
+            var upload = new Upload
             {
-                var upload = new Upload();
-                upload.ContentType = dictionary.GetValue<string>("content_type");
-                upload.FileName = dictionary.GetValue<string>("filename");
-                upload.Token = dictionary.GetValue<string>("token");
-                upload.Description = dictionary.GetValue<string>("description");
-                return upload;
-            }
-            return null;
+                ContentType = dictionary.GetValue<string>("content_type"),
+                FileName = dictionary.GetValue<string>("filename"),
+                Token = dictionary.GetValue<string>("token"),
+                Description = dictionary.GetValue<string>("description")
+            };
+            return upload;
         }
 
         public override IDictionary<string, object> Serialize(

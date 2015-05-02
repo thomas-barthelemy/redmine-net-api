@@ -31,29 +31,27 @@ namespace Redmine.Net.Api.JSonConverters
             Type type,
             JavaScriptSerializer serializer)
         {
-            if (dictionary != null)
+            if (dictionary == null) return null;
+            var project = new Project
             {
-                var project = new Project();
-                project.Id = dictionary.GetValue<int>("id");
-                project.Description = dictionary.GetValue<string>("description");
-                project.HomePage = dictionary.GetValue<string>("homepage");
-                project.Name = dictionary.GetValue<string>("name");
-                project.Identifier = dictionary.GetValue<string>("identifier");
-                project.Status = dictionary.GetValue<ProjectStatus>("status");
-                project.CreatedOn = dictionary.GetValue<DateTime?>("created_on");
-                project.UpdatedOn = dictionary.GetValue<DateTime?>("updated_on");
-                project.Trackers =
-                    dictionary.GetValueAsCollection<ProjectTracker>("trackers");
-                project.CustomFields =
-                    dictionary.GetValueAsCollection<IssueCustomField>("custom_fields");
-                project.IsPublic = dictionary.GetValue<bool>("is_public");
-                project.Parent = dictionary.GetValueAsIdentifiableName("parent");
-                project.IssueCategories =
+                Id = dictionary.GetValue<int>("id"),
+                Description = dictionary.GetValue<string>("description"),
+                HomePage = dictionary.GetValue<string>("homepage"),
+                Name = dictionary.GetValue<string>("name"),
+                Identifier = dictionary.GetValue<string>("identifier"),
+                Status = dictionary.GetValue<ProjectStatus>("status"),
+                CreatedOn = dictionary.GetValue<DateTime?>("created_on"),
+                UpdatedOn = dictionary.GetValue<DateTime?>("updated_on"),
+                Trackers = dictionary.GetValueAsCollection<ProjectTracker>("trackers"),
+                CustomFields =
+                    dictionary.GetValueAsCollection<IssueCustomField>("custom_fields"),
+                IsPublic = dictionary.GetValue<bool>("is_public"),
+                Parent = dictionary.GetValueAsIdentifiableName("parent"),
+                IssueCategories =
                     dictionary.GetValueAsCollection<ProjectIssueCategory>(
-                        "issue_categories");
-                return project;
-            }
-            return null;
+                        "issue_categories")
+            };
+            return project;
         }
 
         public override IDictionary<string, object> Serialize(

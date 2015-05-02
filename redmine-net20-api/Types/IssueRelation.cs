@@ -149,7 +149,7 @@ namespace Redmine.Net.Api.Types
         {
             writer.WriteElementString("issue_to_id", IssueToId.ToString());
             writer.WriteElementString("relation_type", Type.ToString());
-            if (Type == IssueRelationType.precedes || Type == IssueRelationType.follows)
+            if (Type == IssueRelationType.Precedes || Type == IssueRelationType.Follows)
                 writer.WriteIfNotDefaultOrNull(Delay, "delay");
         }
     }

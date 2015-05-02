@@ -33,22 +33,21 @@ namespace Redmine.Net.Api.JSonConverters
             Type type,
             JavaScriptSerializer serializer)
         {
-            if (dictionary != null)
+            if (dictionary == null) return null;
+            var tracker = new WikiPage
             {
-                var tracker = new WikiPage();
-                tracker.Id = dictionary.GetValue<int>("id");
-                tracker.Author = dictionary.GetValueAsIdentifiableName("author");
-                tracker.Comments = dictionary.GetValue<string>("comments");
-                tracker.CreatedOn = dictionary.GetValue<DateTime?>("created_on");
-                tracker.Text = dictionary.GetValue<string>("text");
-                tracker.Title = dictionary.GetValue<string>("title");
-                tracker.UpdatedOn = dictionary.GetValue<DateTime?>("updated_on");
-                tracker.Version = dictionary.GetValue<int>("version");
-                tracker.Attachments =
-                    dictionary.GetValueAsCollection<Attachment>("attachments");
-                return tracker;
-            }
-            return null;
+                Id = dictionary.GetValue<int>("id"),
+                Author = dictionary.GetValueAsIdentifiableName("author"),
+                Comments = dictionary.GetValue<string>("comments"),
+                CreatedOn = dictionary.GetValue<DateTime?>("created_on"),
+                Text = dictionary.GetValue<string>("text"),
+                Title = dictionary.GetValue<string>("title"),
+                UpdatedOn = dictionary.GetValue<DateTime?>("updated_on"),
+                Version = dictionary.GetValue<int>("version"),
+                Attachments =
+                    dictionary.GetValueAsCollection<Attachment>("attachments")
+            };
+            return tracker;
         }
 
         public override IDictionary<string, object> Serialize(

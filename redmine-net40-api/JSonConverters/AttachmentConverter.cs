@@ -30,20 +30,19 @@ namespace Redmine.Net.Api.JSonConverters
             Type type,
             JavaScriptSerializer serializer)
         {
-            if (dictionary != null)
+            if (dictionary == null) return null;
+            var attachment = new Attachment
             {
-                var attachment = new Attachment();
-                attachment.Id = dictionary.GetValue<int>("id");
-                attachment.Description = dictionary.GetValue<string>("description");
-                attachment.Author = dictionary.GetValueAsIdentifiableName("author");
-                attachment.ContentType = dictionary.GetValue<string>("content_type");
-                attachment.ContentUrl = dictionary.GetValue<string>("content_url");
-                attachment.CreatedOn = dictionary.GetValue<DateTime?>("created_on");
-                attachment.FileName = dictionary.GetValue<string>("filename");
-                attachment.FileSize = dictionary.GetValue<int>("filesize");
-                return attachment;
-            }
-            return null;
+                Id = dictionary.GetValue<int>("id"),
+                Description = dictionary.GetValue<string>("description"),
+                Author = dictionary.GetValueAsIdentifiableName("author"),
+                ContentType = dictionary.GetValue<string>("content_type"),
+                ContentUrl = dictionary.GetValue<string>("content_url"),
+                CreatedOn = dictionary.GetValue<DateTime?>("created_on"),
+                FileName = dictionary.GetValue<string>("filename"),
+                FileSize = dictionary.GetValue<int>("filesize")
+            };
+            return attachment;
         }
 
         public override IDictionary<string, object> Serialize(

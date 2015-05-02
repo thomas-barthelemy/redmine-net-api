@@ -208,7 +208,7 @@ namespace Redmine.Net.Api
         /// <param name="groupId">get only users who are members of the given group</param>
         /// <returns></returns>
         public IList<User> GetUsers(
-            UserStatus userStatus = UserStatus.STATUS_ACTIVE,
+            UserStatus userStatus = UserStatus.StatusActive,
             string name = null,
             int groupId = 0)
         {

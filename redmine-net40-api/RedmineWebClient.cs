@@ -23,21 +23,20 @@ namespace Redmine.Net.Api
     /// </summary>
     public class RedmineWebClient : WebClient
     {
-        private readonly CookieContainer container = new CookieContainer();
+        private readonly CookieContainer _container = new CookieContainer();
 
         protected override WebRequest GetWebRequest(Uri address)
         {
             Headers.Add(HttpRequestHeader.Cookie, "redmineCookie");
             var wr = base.GetWebRequest(address);
             var httpWebRequest = wr as HttpWebRequest;
-            if (httpWebRequest != null)
-            {
-                httpWebRequest.CookieContainer = container;
-                httpWebRequest.AutomaticDecompression = DecompressionMethods.GZip |
-                                                        DecompressionMethods.Deflate;
-                return httpWebRequest;
-            }
-            return wr;
+            
+            if (httpWebRequest == null) return wr;
+            
+            httpWebRequest.CookieContainer = _container;
+            httpWebRequest.AutomaticDecompression = DecompressionMethods.GZip |
+                                                    DecompressionMethods.Deflate;
+            return httpWebRequest;
         }
     }
 }

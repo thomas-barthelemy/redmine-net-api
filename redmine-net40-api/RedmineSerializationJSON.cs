@@ -27,7 +27,7 @@ namespace Redmine.Net.Api
 {
     public static partial class RedmineSerialization
     {
-        private static readonly Dictionary<Type, JavaScriptConverter> converters = new Dictionary
+        private static readonly Dictionary<Type, JavaScriptConverter> ConvertersInstance = new Dictionary
             <Type, JavaScriptConverter>
         {
             {typeof (Issue), new IssueConverter()},
@@ -67,7 +67,7 @@ namespace Redmine.Net.Api
 
         public static Dictionary<Type, JavaScriptConverter> Converters
         {
-            get { return converters; }
+            get { return ConvertersInstance; }
         }
 
         public static string JsonSerializer<T>(T type) where T : new()
@@ -75,7 +75,7 @@ namespace Redmine.Net.Api
             try
             {
                 var ser = new JavaScriptSerializer();
-                ser.RegisterConverters(new[] {converters[typeof (T)]});
+                ser.RegisterConverters(new[] { Converters[typeof(T)] });
                 var jsonString = ser.Serialize(type);
                 return jsonString;
             }
@@ -104,7 +104,7 @@ namespace Redmine.Net.Api
             totalCount = 0;
             if (string.IsNullOrEmpty(jsonString)) return null;
             var ser = new JavaScriptSerializer();
-            ser.RegisterConverters(new[] {converters[type]});
+            ser.RegisterConverters(new[] { Converters[type] });
             var dic = ser.Deserialize<Dictionary<string, object>>(jsonString);
             if (dic == null) return null;
             object obj, tc;
@@ -120,8 +120,9 @@ namespace Redmine.Net.Api
                         var arrayList = item as ArrayList;
                         if (arrayList != null)
                         {
-                            foreach (var item2 in arrayList)
-                                info += item2 as string + " ";
+                            info = arrayList
+                                .Cast<object>()
+                                .Aggregate(info, (current, item2) => current + (item2 as string + " "));
                         }
                         else
                             info += item as string + " ";
@@ -189,7 +190,7 @@ namespace Redmine.Net.Api
         {
             if (string.IsNullOrEmpty(jsonString)) return null;
             var ser = new JavaScriptSerializer();
-            ser.RegisterConverters(new[] {converters[type]});
+            ser.RegisterConverters(new[] { Converters[type] });
             var dic = ser.Deserialize<Dictionary<string, object>>(jsonString);
             if (dic == null) return null;
             object obj;

@@ -32,44 +32,43 @@ namespace Redmine.Net.Api.JSonConverters
             Type type,
             JavaScriptSerializer serializer)
         {
-            if (dictionary != null)
+            if (dictionary == null) return null;
+            var issue = new Issue
             {
-                var issue = new Issue();
-                issue.Id = dictionary.GetValue<int>("id");
-                issue.Description = dictionary.GetValue<string>("description");
-                issue.Project = dictionary.GetValueAsIdentifiableName("project");
-                issue.Tracker = dictionary.GetValueAsIdentifiableName("tracker");
-                issue.Status = dictionary.GetValueAsIdentifiableName("status");
-                issue.CreatedOn = dictionary.GetValue<DateTime?>("created_on");
-                issue.UpdatedOn = dictionary.GetValue<DateTime?>("updated_on");
-                issue.ClosedOn = dictionary.GetValue<DateTime?>("closed_on");
-                issue.Priority = dictionary.GetValueAsIdentifiableName("priority");
-                issue.Author = dictionary.GetValueAsIdentifiableName("author");
-                issue.AssignedTo = dictionary.GetValueAsIdentifiableName("assigned_to");
-                issue.Category = dictionary.GetValueAsIdentifiableName("category");
-                issue.FixedVersion = dictionary.GetValueAsIdentifiableName(
-                    "fixed_version");
-                issue.Subject = dictionary.GetValue<string>("subject");
-                issue.Notes = dictionary.GetValue<string>("notes");
-                issue.StartDate = dictionary.GetValue<DateTime?>("start_date");
-                issue.DueDate = dictionary.GetValue<DateTime?>("due_date");
-                issue.DoneRatio = dictionary.GetValue<float>("done_ratio");
-                issue.EstimatedHours = dictionary.GetValue<float>("estimated_hours");
-                issue.ParentIssue = dictionary.GetValueAsIdentifiableName("parent");
-                issue.CustomFields =
-                    dictionary.GetValueAsCollection<IssueCustomField>("custom_fields");
-                issue.Attachments =
-                    dictionary.GetValueAsCollection<Attachment>("attachments");
-                issue.Relations =
-                    dictionary.GetValueAsCollection<IssueRelation>("relations");
-                issue.Journals = dictionary.GetValueAsCollection<Journal>("journals");
-                issue.Changesets = dictionary.GetValueAsCollection<ChangeSet>(
-                    "changesets");
-                issue.Watchers = dictionary.GetValueAsCollection<Watcher>("watchers");
-                issue.Children = dictionary.GetValueAsCollection<IssueChild>("children");
-                return issue;
-            }
-            return null;
+                Id = dictionary.GetValue<int>("id"),
+                Description = dictionary.GetValue<string>("description"),
+                Project = dictionary.GetValueAsIdentifiableName("project"),
+                Tracker = dictionary.GetValueAsIdentifiableName("tracker"),
+                Status = dictionary.GetValueAsIdentifiableName("status"),
+                CreatedOn = dictionary.GetValue<DateTime?>("created_on"),
+                UpdatedOn = dictionary.GetValue<DateTime?>("updated_on"),
+                ClosedOn = dictionary.GetValue<DateTime?>("closed_on"),
+                Priority = dictionary.GetValueAsIdentifiableName("priority"),
+                Author = dictionary.GetValueAsIdentifiableName("author"),
+                AssignedTo = dictionary.GetValueAsIdentifiableName("assigned_to"),
+                Category = dictionary.GetValueAsIdentifiableName("category"),
+                FixedVersion = dictionary.GetValueAsIdentifiableName(
+                    "fixed_version"),
+                Subject = dictionary.GetValue<string>("subject"),
+                Notes = dictionary.GetValue<string>("notes"),
+                StartDate = dictionary.GetValue<DateTime?>("start_date"),
+                DueDate = dictionary.GetValue<DateTime?>("due_date"),
+                DoneRatio = dictionary.GetValue<float>("done_ratio"),
+                EstimatedHours = dictionary.GetValue<float>("estimated_hours"),
+                ParentIssue = dictionary.GetValueAsIdentifiableName("parent"),
+                CustomFields =
+                    dictionary.GetValueAsCollection<IssueCustomField>("custom_fields"),
+                Attachments =
+                    dictionary.GetValueAsCollection<Attachment>("attachments"),
+                Relations =
+                    dictionary.GetValueAsCollection<IssueRelation>("relations"),
+                Journals = dictionary.GetValueAsCollection<Journal>("journals"),
+                Changesets = dictionary.GetValueAsCollection<ChangeSet>(
+                    "changesets"),
+                Watchers = dictionary.GetValueAsCollection<Watcher>("watchers"),
+                Children = dictionary.GetValueAsCollection<IssueChild>("children")
+            };
+            return issue;
         }
 
         public override IDictionary<string, object> Serialize(

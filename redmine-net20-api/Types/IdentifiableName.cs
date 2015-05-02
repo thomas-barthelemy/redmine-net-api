@@ -39,6 +39,7 @@ namespace Redmine.Net.Api.Types
         /// <param name="reader">The reader.</param>
         public IdentifiableName(XmlReader reader)
         {
+            // TODO: Avoid Virtual method call in a constructor
             ReadXml(reader);
         }
 

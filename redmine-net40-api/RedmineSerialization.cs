@@ -30,7 +30,7 @@ namespace Redmine.Net.Api
         /// <param name="obj">The object to serialize.</param>
         /// <returns>The System.String that contains the XML document.</returns>
         /// <exception cref="InvalidOperationException"></exception>
-        public static string ToXML<T>(T obj) where T : class
+        public static string ToXml<T>(T obj) where T : class
         {
             var xws = new XmlWriterSettings
             {
@@ -57,7 +57,7 @@ namespace Redmine.Net.Api
         ///     An error occurred during deserialization. The original exception is available
         ///     using the System.Exception.InnerException property.
         /// </exception>
-        public static T FromXML<T>(string xml) where T : class
+        public static T FromXml<T>(string xml) where T : class
         {
             using (var text = new StringReader(xml))
             {
@@ -76,7 +76,7 @@ namespace Redmine.Net.Api
         ///     An error occurred during deserialization. The original exception is available
         ///     using the System.Exception.InnerException property.
         /// </exception>
-        public static object FromXML(string xml, Type type)
+        public static object FromXml(string xml, Type type)
         {
             using (var text = new StringReader(xml))
             {

@@ -166,17 +166,17 @@ namespace Redmine.Net.Api.Types
 
     public enum VersionStatus
     {
-        open = 1,
-        locked,
-        closed
+        Open = 1,
+        Locked,
+        Closed
     }
 
     public enum VersionSharing
     {
-        none = 1,
-        descendants,
-        hierarchy,
-        tree,
-        system
+        None = 1,
+        Descendants,
+        Hierarchy,
+        Tree,
+        System
     }
 }

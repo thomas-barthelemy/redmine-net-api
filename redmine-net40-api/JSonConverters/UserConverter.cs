@@ -30,27 +30,26 @@ namespace Redmine.Net.Api.JSonConverters
             Type type,
             JavaScriptSerializer serializer)
         {
-            if (dictionary != null)
+            if (dictionary == null) return null;
+            var user = new User
             {
-                var user = new User();
-                user.Login = dictionary.GetValue<string>("login");
-                user.Id = dictionary.GetValue<int>("id");
-                user.FirstName = dictionary.GetValue<string>("firstname");
-                user.LastName = dictionary.GetValue<string>("lastname");
-                user.Email = dictionary.GetValue<string>("mail");
-                user.AuthenticationModeId = dictionary.GetValue<int?>("auth_source_id");
-                user.CreatedOn = dictionary.GetValue<DateTime?>("created_on");
-                user.LastLoginOn = dictionary.GetValue<DateTime?>("last_login_on");
-                user.ApiKey = dictionary.GetValue<string>("api_key");
-                user.Status = dictionary.GetValue<UserStatus>("status");
-                user.CustomFields =
-                    dictionary.GetValueAsCollection<IssueCustomField>("custom_fields");
-                user.Memberships =
-                    dictionary.GetValueAsCollection<Membership>("memberships");
-                user.Groups = dictionary.GetValueAsCollection<UserGroup>("groups");
-                return user;
-            }
-            return null;
+                Login = dictionary.GetValue<string>("login"),
+                Id = dictionary.GetValue<int>("id"),
+                FirstName = dictionary.GetValue<string>("firstname"),
+                LastName = dictionary.GetValue<string>("lastname"),
+                Email = dictionary.GetValue<string>("mail"),
+                AuthenticationModeId = dictionary.GetValue<int?>("auth_source_id"),
+                CreatedOn = dictionary.GetValue<DateTime?>("created_on"),
+                LastLoginOn = dictionary.GetValue<DateTime?>("last_login_on"),
+                ApiKey = dictionary.GetValue<string>("api_key"),
+                Status = dictionary.GetValue<UserStatus>("status"),
+                CustomFields =
+                    dictionary.GetValueAsCollection<IssueCustomField>("custom_fields"),
+                Memberships =
+                    dictionary.GetValueAsCollection<Membership>("memberships"),
+                Groups = dictionary.GetValueAsCollection<UserGroup>("groups")
+            };
+            return user;
         }
 
         public override IDictionary<string, object> Serialize(

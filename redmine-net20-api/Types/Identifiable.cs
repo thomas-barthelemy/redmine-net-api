@@ -24,8 +24,6 @@ namespace Redmine.Net.Api.Types
     public abstract class Identifiable<T>
         where T : Identifiable<T>
     {
-        private int? oldHashCode;
-
         /// <summary>
         ///     Gets or sets the id.
         /// </summary>
@@ -46,14 +44,6 @@ namespace Redmine.Net.Api.Types
 
         public override int GetHashCode()
         {
-            if (oldHashCode.HasValue)
-                return oldHashCode.Value;
-            var thisIsNew = Equals(Id, default(int));
-            if (thisIsNew)
-            {
-                oldHashCode = base.GetHashCode();
-                return oldHashCode.Value;
-            }
             return Id.GetHashCode();
         }
 

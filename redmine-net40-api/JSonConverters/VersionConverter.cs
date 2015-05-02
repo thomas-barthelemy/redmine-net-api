@@ -31,23 +31,22 @@ namespace Redmine.Net.Api.JSonConverters
             Type type,
             JavaScriptSerializer serializer)
         {
-            if (dictionary != null)
+            if (dictionary == null) return null;
+            var version = new Version
             {
-                var version = new Version();
-                version.Id = dictionary.GetValue<int>("id");
-                version.Description = dictionary.GetValue<string>("description");
-                version.Name = dictionary.GetValue<string>("name");
-                version.CreatedOn = dictionary.GetValue<DateTime?>("created_on");
-                version.UpdatedOn = dictionary.GetValue<DateTime?>("updated_on");
-                version.DueDate = dictionary.GetValue<DateTime?>("due_date");
-                version.Project = dictionary.GetValueAsIdentifiableName("project");
-                version.Sharing = dictionary.GetValue<VersionSharing>("sharing");
-                version.Status = dictionary.GetValue<VersionStatus>("status");
-                version.CustomFields =
-                    dictionary.GetValueAsCollection<IssueCustomField>("custom_fields");
-                return version;
-            }
-            return null;
+                Id = dictionary.GetValue<int>("id"),
+                Description = dictionary.GetValue<string>("description"),
+                Name = dictionary.GetValue<string>("name"),
+                CreatedOn = dictionary.GetValue<DateTime?>("created_on"),
+                UpdatedOn = dictionary.GetValue<DateTime?>("updated_on"),
+                DueDate = dictionary.GetValue<DateTime?>("due_date"),
+                Project = dictionary.GetValueAsIdentifiableName("project"),
+                Sharing = dictionary.GetValue<VersionSharing>("sharing"),
+                Status = dictionary.GetValue<VersionStatus>("status"),
+                CustomFields =
+                    dictionary.GetValueAsCollection<IssueCustomField>("custom_fields")
+            };
+            return version;
         }
 
         public override IDictionary<string, object> Serialize(

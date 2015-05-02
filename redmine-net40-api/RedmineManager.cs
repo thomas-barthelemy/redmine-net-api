@@ -48,11 +48,11 @@ namespace Redmine.Net.Api
         private const string PUT = "PUT";
         private const string POST = "POST";
         private const string DELETE = "DELETE";
-        private readonly CredentialCache credentialCache;
-        private readonly string host, apiKey, basicAuthorization;
-        private readonly MimeFormat mimeFormat;
+        private readonly CredentialCache _credentialCache;
+        private readonly string _host, _apiKey, _basicAuthorization;
+        private readonly MimeFormat _mimeFormat;
 
-        private readonly Dictionary<Type, string> urls = new Dictionary<Type, string>
+        private readonly Dictionary<Type, string> _urls = new Dictionary<Type, string>
         {
             {typeof (Issue), "issues"},
             {typeof (Project), "projects"},
@@ -84,7 +84,7 @@ namespace Redmine.Net.Api
         /// <param name="verifyServerCert">if set to <c>true</c> [verify server cert].</param>
         public RedmineManager(
             string host,
-            MimeFormat mimeFormat = MimeFormat.xml,
+            MimeFormat mimeFormat = MimeFormat.Xml,
             bool verifyServerCert = true)
         {
             PageSize = 25;
@@ -95,8 +95,8 @@ namespace Redmine.Net.Api
                 host = "http://" + host;
             if (!Uri.TryCreate(host, UriKind.Absolute, out uriResult))
                 throw new RedmineException("The host is not valid!");
-            this.host = host;
-            this.mimeFormat = mimeFormat;
+            _host = host;
+            _mimeFormat = mimeFormat;
             if (!verifyServerCert)
                 ServicePointManager.ServerCertificateValidationCallback +=
                     RemoteCertValidate;
@@ -122,12 +122,12 @@ namespace Redmine.Net.Api
         public RedmineManager(
             string host,
             string apiKey,
-            MimeFormat mimeFormat = MimeFormat.xml,
+            MimeFormat mimeFormat = MimeFormat.Xml,
             bool verifyServerCert = true)
             : this(host, mimeFormat, verifyServerCert)
         {
             PageSize = 25;
-            this.apiKey = apiKey;
+            _apiKey = apiKey;
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace Redmine.Net.Api
             string host,
             string login,
             string password,
-            MimeFormat mimeFormat = MimeFormat.xml,
+            MimeFormat mimeFormat = MimeFormat.Xml,
             bool verifyServerCert = true)
             : this(host, mimeFormat, verifyServerCert)
         {
@@ -164,11 +164,11 @@ namespace Redmine.Net.Api
                 host = "http://" + host;
             if (!Uri.TryCreate(host, UriKind.Absolute, out uriResult))
                 throw new RedmineException("The host is not valid!");
-            credentialCache = new CredentialCache
+            _credentialCache = new CredentialCache
             {
                 {uriResult, "Basic", new NetworkCredential(login, password)}
             };
-            basicAuthorization = "Basic " +
+            _basicAuthorization = "Basic " +
                                  Convert.ToBase64String(
                                      Encoding.ASCII.GetBytes(login + ":" + password));
         }
@@ -204,10 +204,10 @@ namespace Redmine.Net.Api
                 ExecuteDownload<User>(
                     string.Format(
                         REQUEST_FORMAT,
-                        host,
-                        urls[typeof (User)],
+                        _host,
+                        _urls[typeof (User)],
                         CURRENT_USER_URI,
-                        mimeFormat),
+                        _mimeFormat),
                     "GetCurrentUser",
                     parameters);
         }
@@ -223,7 +223,7 @@ namespace Redmine.Net.Api
         /// <param name="groupId">get only users who are members of the given group</param>
         /// <returns></returns>
         public IList<User> GetUsers(
-            UserStatus userStatus = UserStatus.STATUS_ACTIVE,
+            UserStatus userStatus = UserStatus.StatusActive,
             string name = null,
             int groupId = 0)
         {
@@ -242,12 +242,12 @@ namespace Redmine.Net.Api
             ExecuteUpload(
                 string.Format(
                     REQUEST_FORMAT,
-                    host,
-                    urls[typeof (Issue)],
+                    _host,
+                    _urls[typeof (Issue)],
                     issueId + "/watchers",
-                    mimeFormat),
+                    _mimeFormat),
                 POST,
-                mimeFormat == MimeFormat.xml
+                _mimeFormat == MimeFormat.Xml
                     ? "<user_id>" + userId + "</user_id>"
                     : "user_id:" + userId,
                 "AddWatcher");
@@ -258,10 +258,10 @@ namespace Redmine.Net.Api
             ExecuteUpload(
                 string.Format(
                     REQUEST_FORMAT,
-                    host,
-                    urls[typeof (Issue)],
+                    _host,
+                    _urls[typeof (Issue)],
                     issueId + "/watchers/" + userId,
-                    mimeFormat),
+                    _mimeFormat),
                 DELETE,
                 string.Empty,
                 "RemoveWatcher");
@@ -277,12 +277,12 @@ namespace Redmine.Net.Api
             ExecuteUpload(
                 string.Format(
                     REQUEST_FORMAT,
-                    host,
-                    urls[typeof (Group)],
+                    _host,
+                    _urls[typeof (Group)],
                     groupId + "/users",
-                    mimeFormat),
+                    _mimeFormat),
                 POST,
-                mimeFormat == MimeFormat.xml
+                _mimeFormat == MimeFormat.Xml
                     ? "<user_id>" + userId + "</user_id>"
                     : "user_id:" + userId,
                 "AddUser");
@@ -298,10 +298,10 @@ namespace Redmine.Net.Api
             ExecuteUpload(
                 string.Format(
                     REQUEST_FORMAT,
-                    host,
-                    urls[typeof (Group)],
+                    _host,
+                    _urls[typeof (Group)],
                     groupId + "/users/" + userId,
-                    mimeFormat),
+                    _mimeFormat),
                 DELETE,
                 string.Empty,
                 "DeleteUser");
@@ -334,14 +334,14 @@ namespace Redmine.Net.Api
             uint version = 0)
         {
             var address = version == 0
-                ? string.Format(WIKI_PAGE_FORMAT, host, projectId, pageName, mimeFormat)
+                ? string.Format(WIKI_PAGE_FORMAT, _host, projectId, pageName, _mimeFormat)
                 : string.Format(
                     WIKI_VERSION_FORMAT,
-                    host,
+                    _host,
                     projectId,
                     pageName,
                     version,
-                    mimeFormat);
+                    _mimeFormat);
             return ExecuteDownload<WikiPage>(address, "GetWikiPage", parameters);
         }
 
@@ -355,7 +355,7 @@ namespace Redmine.Net.Api
             int totalCount;
             return
                 ExecuteDownloadList<WikiPage>(
-                    string.Format(WIKI_INDEX_FORMAT, host, projectId, mimeFormat),
+                    string.Format(WIKI_INDEX_FORMAT, _host, projectId, _mimeFormat),
                     "GetAllWikiPages",
                     "wiki",
                     out totalCount);
@@ -377,7 +377,7 @@ namespace Redmine.Net.Api
             if (string.IsNullOrEmpty(result)) return null;
             return
                 ExecuteUpload<WikiPage>(
-                    string.Format(WIKI_PAGE_FORMAT, host, projectId, pageName, mimeFormat),
+                    string.Format(WIKI_PAGE_FORMAT, _host, projectId, pageName, _mimeFormat),
                     PUT,
                     result,
                     "CreateOrUpdateWikiPage");
@@ -392,7 +392,7 @@ namespace Redmine.Net.Api
         public void DeleteWikiPage(string projectId, string pageName)
         {
             ExecuteUpload(
-                string.Format(WIKI_PAGE_FORMAT, host, projectId, pageName, mimeFormat),
+                string.Format(WIKI_PAGE_FORMAT, _host, projectId, pageName, _mimeFormat),
                 DELETE,
                 string.Empty,
                 "DeleteWikiPage");
@@ -412,7 +412,7 @@ namespace Redmine.Net.Api
                 {
                     var response =
                         wc.UploadData(
-                            string.Format(FORMAT, host, "uploads", mimeFormat),
+                            string.Format(FORMAT, _host, "uploads", _mimeFormat),
                             data);
                     var responseString = Encoding.ASCII.GetString(response);
                     return Deserialize<Upload>(responseString);
@@ -479,7 +479,7 @@ namespace Redmine.Net.Api
             out int totalCount) where T : class, new()
         {
             totalCount = -1;
-            if (!urls.ContainsKey(typeof (T))) return null;
+            if (!_urls.ContainsKey(typeof (T))) return null;
             var type = typeof (T);
             string address;
             if (type == typeof (Version) || type == typeof (IssueCategory) ||
@@ -491,11 +491,11 @@ namespace Redmine.Net.Api
                         "The project id is mandatory! \nCheck if you have included the parameter project_id to parameters.");
                 address = string.Format(
                     ENTITY_WITH_PARENT_FORMAT,
-                    host,
+                    _host,
                     "projects",
                     projectId,
-                    urls[type],
-                    mimeFormat);
+                    _urls[type],
+                    _mimeFormat);
             }
             else if (type == typeof (IssueRelation))
             {
@@ -505,18 +505,18 @@ namespace Redmine.Net.Api
                         "The issue id is mandatory! \nCheck if you have included the parameter issue_id to parameters");
                 address = string.Format(
                     ENTITY_WITH_PARENT_FORMAT,
-                    host,
+                    _host,
                     "issues",
                     issueId,
-                    urls[type],
-                    mimeFormat);
+                    _urls[type],
+                    _mimeFormat);
             }
             else
-                address = string.Format(FORMAT, host, urls[type], mimeFormat);
+                address = string.Format(FORMAT, _host, _urls[type], _mimeFormat);
             return ExecuteDownloadList<T>(
                 address,
                 "GetObjectList<" + type.Name + ">",
-                urls[type],
+                _urls[type],
                 out totalCount,
                 parameters);
         }
@@ -582,10 +582,10 @@ namespace Redmine.Net.Api
             where T : class, new()
         {
             var type = typeof (T);
-            return !urls.ContainsKey(type)
+            return !_urls.ContainsKey(type)
                 ? null
                 : ExecuteDownload<T>(
-                    string.Format(REQUEST_FORMAT, host, urls[type], id, mimeFormat),
+                    string.Format(REQUEST_FORMAT, _host, _urls[type], id, _mimeFormat),
                     "GetObject<" + type.Name + ">",
                     parameters);
         }
@@ -613,7 +613,7 @@ namespace Redmine.Net.Api
         public T CreateObject<T>(T obj, string ownerId = null) where T : class, new()
         {
             var type = typeof (T);
-            if (!urls.ContainsKey(type)) return null;
+            if (!_urls.ContainsKey(type)) return null;
             var result = Serialize(obj);
             if (string.IsNullOrEmpty(result)) return null;
             string address;
@@ -624,11 +624,11 @@ namespace Redmine.Net.Api
                     throw new RedmineException("The owner id(project id) is mandatory!");
                 address = string.Format(
                     ENTITY_WITH_PARENT_FORMAT,
-                    host,
+                    _host,
                     "projects",
                     ownerId,
-                    urls[type],
-                    mimeFormat);
+                    _urls[type],
+                    _mimeFormat);
             }
             else if (type == typeof (IssueRelation))
             {
@@ -636,14 +636,14 @@ namespace Redmine.Net.Api
                     throw new RedmineException("The owner id(issue id) is mandatory!");
                 address = string.Format(
                     ENTITY_WITH_PARENT_FORMAT,
-                    host,
+                    _host,
                     "issues",
                     ownerId,
-                    urls[type],
-                    mimeFormat);
+                    _urls[type],
+                    _mimeFormat);
             }
             else
-                address = string.Format(FORMAT, host, urls[type], mimeFormat);
+                address = string.Format(FORMAT, _host, _urls[type], _mimeFormat);
             return ExecuteUpload<T>(
                 address,
                 POST,
@@ -685,7 +685,7 @@ namespace Redmine.Net.Api
             where T : class, new()
         {
             var type = typeof (T);
-            if (!urls.ContainsKey(type)) return;
+            if (!_urls.ContainsKey(type)) return;
             var request = Serialize(obj);
             if (string.IsNullOrEmpty(request)) return;
             request = Regex.Replace(request, @"\r\n|\r|\n", "\r\n", RegexOptions.Compiled);
@@ -697,15 +697,15 @@ namespace Redmine.Net.Api
                     throw new RedmineException("The project owner id is mandatory!");
                 address = string.Format(
                     ENTITY_WITH_PARENT_FORMAT,
-                    host,
+                    _host,
                     "projects",
                     projectId,
-                    urls[type],
-                    mimeFormat);
+                    _urls[type],
+                    _mimeFormat);
             }
             else
             {
-                address = string.Format(REQUEST_FORMAT, host, urls[type], id, mimeFormat);
+                address = string.Format(REQUEST_FORMAT, _host, _urls[type], id, _mimeFormat);
             }
             ExecuteUpload(address, PUT, request, "UpdateObject<" + type.Name + ">");
         }
@@ -722,9 +722,9 @@ namespace Redmine.Net.Api
             where T : class
         {
             var type = typeof (T);
-            if (!urls.ContainsKey(typeof (T))) return;
+            if (!_urls.ContainsKey(typeof (T))) return;
             ExecuteUpload(
-                string.Format(REQUEST_FORMAT, host, urls[type], id, mimeFormat),
+                string.Format(REQUEST_FORMAT, _host, _urls[type], id, _mimeFormat),
                 DELETE,
                 string.Empty,
                 "DeleteObject<" + type.Name + ">");
@@ -740,19 +740,19 @@ namespace Redmine.Net.Api
         {
             var webClient = new RedmineWebClient();
             if (parameters != null) webClient.QueryString = parameters;
-            if (!string.IsNullOrEmpty(apiKey))
+            if (!string.IsNullOrEmpty(_apiKey))
             {
-                webClient.QueryString["key"] = apiKey;
+                webClient.QueryString["key"] = _apiKey;
             }
             else
             {
-                if (credentialCache != null) webClient.Credentials = credentialCache;
+                if (_credentialCache != null) webClient.Credentials = _credentialCache;
             }
             if (!string.IsNullOrWhiteSpace(ImpersonateUser))
                 webClient.Headers.Add("X-Redmine-Switch-User", ImpersonateUser);
             webClient.Headers.Add(
                 "Content-Type",
-                mimeFormat == MimeFormat.json
+                _mimeFormat == MimeFormat.Json
                     ? "application/json; charset=utf-8"
                     : "application/xml; charset=utf-8");
             webClient.Encoding = Encoding.UTF8;
@@ -769,18 +769,18 @@ namespace Redmine.Net.Api
         {
             var webClient = new RedmineWebClient();
             if (parameters != null) webClient.QueryString = parameters;
-            if (!string.IsNullOrEmpty(apiKey))
+            if (!string.IsNullOrEmpty(_apiKey))
             {
-                webClient.QueryString["key"] = apiKey;
+                webClient.QueryString["key"] = _apiKey;
             }
             else
             {
-                if (credentialCache != null) webClient.Credentials = credentialCache;
+                if (_credentialCache != null) webClient.Credentials = _credentialCache;
             }
             webClient.UseDefaultCredentials = false;
             webClient.Headers.Add("Content-Type", "application/octet-stream");
             // Workaround - it seems that WebClient doesn't send credentials in each POST request
-            webClient.Headers.Add("Authorization", basicAuthorization);
+            webClient.Headers.Add("Authorization", _basicAuthorization);
             return webClient;
         }
 
@@ -885,21 +885,21 @@ namespace Redmine.Net.Api
 
         private string Serialize<T>(T obj) where T : class, new()
         {
-            if (mimeFormat == MimeFormat.json)
+            if (_mimeFormat == MimeFormat.Json)
                 return RedmineSerialization.JsonSerializer(obj);
-            return RedmineSerialization.ToXML(obj);
+            return RedmineSerialization.ToXml(obj);
         }
 
         private T Deserialize<T>(string response) where T : class, new()
         {
             var type = typeof (T);
-            if (mimeFormat == MimeFormat.json)
+            if (_mimeFormat == MimeFormat.Json)
                 return type == typeof (IssueCategory)
                     ? RedmineSerialization.JsonDeserialize<T>(response, "issue_category")
                     : RedmineSerialization.JsonDeserialize<T>(
                         response,
                         type == typeof (IssueRelation) ? "relation" : null);
-            return RedmineSerialization.FromXML<T>(response);
+            return RedmineSerialization.FromXml<T>(response);
         }
 
         private IList<T> DeserializeList<T>(
@@ -908,7 +908,7 @@ namespace Redmine.Net.Api
             out int totalCount) where T : class, new()
         {
             var type = typeof (T);
-            if (mimeFormat == MimeFormat.json)
+            if (_mimeFormat == MimeFormat.Json)
             {
                 if (type == typeof (IssuePriority)) jsonRoot = "issue_priorities";
                 if (type == typeof (TimeEntryActivity))

@@ -33,14 +33,13 @@ namespace Redmine.Net.Api.JSonConverters
             Type type,
             JavaScriptSerializer serializer)
         {
-            if (dictionary != null)
+            if (dictionary == null) return null;
+            var watcher = new Watcher
             {
-                var watcher = new Watcher();
-                watcher.Id = dictionary.GetValue<int>("id");
-                watcher.Name = dictionary.GetValue<string>("name");
-                return watcher;
-            }
-            return null;
+                Id = dictionary.GetValue<int>("id"),
+                Name = dictionary.GetValue<string>("name")
+            };
+            return watcher;
         }
 
         public override IDictionary<string, object> Serialize(

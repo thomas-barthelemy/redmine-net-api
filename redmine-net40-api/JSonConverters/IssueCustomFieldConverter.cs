@@ -32,41 +32,38 @@ namespace Redmine.Net.Api.JSonConverters
             Type type,
             JavaScriptSerializer serializer)
         {
-            if (dictionary != null)
+            if (dictionary == null) return null;
+            var customField = new IssueCustomField
             {
-                var customField = new IssueCustomField();
-                customField.Id = dictionary.GetValue<int>("id");
-                customField.Name = dictionary.GetValue<string>("name");
-                customField.Multiple = dictionary.GetValue<bool>("multiple");
-                var val = dictionary.GetValue<object>("value");
-                if (val != null)
+                Id = dictionary.GetValue<int>("id"),
+                Name = dictionary.GetValue<string>("name"),
+                Multiple = dictionary.GetValue<bool>("multiple")
+            };
+            var val = dictionary.GetValue<object>("value");
+            if (val == null) return customField;
+            if (customField.Values == null)
+                customField.Values = new List<CustomFieldValue>();
+            var list = val as ArrayList;
+            if (list != null)
+            {
+                foreach (string value in list)
                 {
-                    if (customField.Values == null)
-                        customField.Values = new List<CustomFieldValue>();
-                    var list = val as ArrayList;
-                    if (list != null)
-                    {
-                        foreach (string value in list)
+                    customField.Values.Add(
+                        new CustomFieldValue
                         {
-                            customField.Values.Add(
-                                new CustomFieldValue
-                                {
-                                    Info = value
-                                });
-                        }
-                    }
-                    else
-                    {
-                        customField.Values.Add(
-                            new CustomFieldValue
-                            {
-                                Info = val as string
-                            });
-                    }
+                            Info = value
+                        });
                 }
-                return customField;
             }
-            return null;
+            else
+            {
+                customField.Values.Add(
+                    new CustomFieldValue
+                    {
+                        Info = val as string
+                    });
+            }
+            return customField;
         }
 
         public override IDictionary<string, object> Serialize(

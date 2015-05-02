@@ -2,14 +2,14 @@
 {
     public enum IssueRelationType
     {
-        relates = 1,
-        duplicates,
-        duplicated,
-        blocks,
-        blocked,
-        precedes,
-        follows,
-        copied_to,
-        copied_from
+        Relates = 1,
+        Duplicates,
+        Duplicated,
+        Blocks,
+        Blocked,
+        Precedes,
+        Follows,
+        CopiedTo,
+        CopiedFrom
     }
 }

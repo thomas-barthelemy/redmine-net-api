@@ -36,10 +36,10 @@ namespace Redmine.Net.Api
         {
             var uri = string.Format(
                 REQUEST_FORMAT,
-                host,
-                urls[typeof (User)],
+                _host,
+                _urls[typeof (User)],
                 CURRENT_USER_URI,
-                mimeFormat);
+                _mimeFormat);
             var result = await new RedmineWebClient().DownloadStringTaskAsync(uri);
             return DeserializeResult<User>(result);
         }
@@ -51,14 +51,14 @@ namespace Redmine.Net.Api
             uint version = 0)
         {
             var uri = version == 0
-                ? string.Format(WIKI_PAGE_FORMAT, host, projectId, pageName, mimeFormat)
+                ? string.Format(WIKI_PAGE_FORMAT, _host, projectId, pageName, _mimeFormat)
                 : string.Format(
                     WIKI_VERSION_FORMAT,
-                    host,
+                    _host,
                     projectId,
                     pageName,
                     version,
-                    mimeFormat);
+                    _mimeFormat);
             var result = await new RedmineWebClient().DownloadStringTaskAsync(uri);
             return DeserializeResult<WikiPage>(result);
         }
@@ -78,10 +78,10 @@ namespace Redmine.Net.Api
                     new Uri(
                         string.Format(
                             WIKI_PAGE_FORMAT,
-                            host,
+                            _host,
                             projectId,
                             pageName,
-                            mimeFormat)),
+                            _mimeFormat)),
                     PUT,
                     result,
                     new AsyncToken
@@ -105,10 +105,10 @@ namespace Redmine.Net.Api
                     new Uri(
                         string.Format(
                             WIKI_PAGE_FORMAT,
-                            host,
+                            _host,
                             projectId,
                             pageName,
-                            mimeFormat)),
+                            _mimeFormat)),
                     DELETE,
                     string.Empty,
                     new AsyncToken
@@ -135,7 +135,7 @@ namespace Redmine.Net.Api
                 var id = Guid.NewGuid();
                 wc.UploadDataCompleted += WcUploadDataCompleted;
                 wc.UploadDataAsync(
-                    new Uri(string.Format(FORMAT, host, "uploads", mimeFormat)),
+                    new Uri(string.Format(FORMAT, _host, "uploads", _mimeFormat)),
                     POST,
                     data,
                     new AsyncToken
@@ -170,12 +170,12 @@ namespace Redmine.Net.Api
                     new Uri(
                         string.Format(
                             REQUEST_FORMAT,
-                            host,
-                            urls[typeof (Group)],
+                            _host,
+                            _urls[typeof (Group)],
                             groupId + "/users",
-                            mimeFormat)),
+                            _mimeFormat)),
                     POST,
-                    mimeFormat == MimeFormat.xml
+                    _mimeFormat == MimeFormat.Xml
                         ? "<user_id>" + userId + "</user_id>"
                         : "user_id:" + userId,
                     asyncToken);
@@ -199,10 +199,10 @@ namespace Redmine.Net.Api
                     new Uri(
                         string.Format(
                             REQUEST_FORMAT,
-                            host,
-                            urls[typeof (Group)],
+                            _host,
+                            _urls[typeof (Group)],
                             groupId + "/users/" + userId,
-                            mimeFormat)),
+                            _mimeFormat)),
                     DELETE,
                     string.Empty,
                     new AsyncToken
@@ -224,7 +224,7 @@ namespace Redmine.Net.Api
         public Guid CreateObjectAsync<T>(T obj) where T : class, new()
         {
             var type = typeof (T);
-            if (!urls.ContainsKey(type)) return Guid.Empty;
+            if (!_urls.ContainsKey(type)) return Guid.Empty;
             var result = Serialize(obj);
             if (string.IsNullOrEmpty(result)) return Guid.Empty;
             using (var wc = CreateWebClient(null))
@@ -232,7 +232,7 @@ namespace Redmine.Net.Api
                 var id = Guid.NewGuid();
                 wc.DownloadStringCompleted += WcDownloadStringCompleted;
                 wc.UploadStringAsync(
-                    new Uri(string.Format(FORMAT, host, urls[type], mimeFormat)),
+                    new Uri(string.Format(FORMAT, _host, _urls[type], _mimeFormat)),
                     POST,
                     result,
                     new AsyncToken
@@ -258,7 +258,7 @@ namespace Redmine.Net.Api
             where T : class, new()
         {
             var type = typeof (T);
-            if (!urls.ContainsKey(type)) return Guid.Empty;
+            if (!_urls.ContainsKey(type)) return Guid.Empty;
             var request = Serialize(obj);
             if (string.IsNullOrEmpty(request)) return Guid.Empty;
             using (var wc = CreateWebClient(null))
@@ -281,11 +281,11 @@ namespace Redmine.Net.Api
                         new Uri(
                             string.Format(
                                 ENTITY_WITH_PARENT_FORMAT,
-                                host,
+                                _host,
                                 "projects",
                                 projectId,
-                                urls[type],
-                                mimeFormat)),
+                                _urls[type],
+                                _mimeFormat)),
                         PUT,
                         request,
                         asyncToken);
@@ -295,10 +295,10 @@ namespace Redmine.Net.Api
                         new Uri(
                             string.Format(
                                 REQUEST_FORMAT,
-                                host,
-                                urls[type],
+                                _host,
+                                _urls[type],
                                 id,
-                                mimeFormat)),
+                                _mimeFormat)),
                         PUT,
                         request,
                         asyncToken);
@@ -317,14 +317,14 @@ namespace Redmine.Net.Api
             where T : class
         {
             var type = typeof (T);
-            if (!urls.ContainsKey(typeof (T))) return Guid.Empty;
+            if (!_urls.ContainsKey(typeof (T))) return Guid.Empty;
             using (var wc = CreateWebClient(parameters))
             {
                 var guid = Guid.NewGuid();
                 wc.DownloadStringCompleted += WcDownloadStringCompleted;
                 wc.UploadStringAsync(
                     new Uri(
-                        string.Format(REQUEST_FORMAT, host, urls[type], id, mimeFormat)),
+                        string.Format(REQUEST_FORMAT, _host, _urls[type], id, _mimeFormat)),
                     DELETE,
                     string.Empty,
                     new AsyncToken
@@ -379,7 +379,7 @@ namespace Redmine.Net.Api
             var type = typeof (T);
             if (type == typeof (List<T>))
             {
-                if (mimeFormat == MimeFormat.json)
+                if (_mimeFormat == MimeFormat.Json)
                 {
                     return
                         (T)
@@ -401,11 +401,11 @@ namespace Redmine.Net.Api
                     }
                 }
             }
-            if (mimeFormat == MimeFormat.json)
+            if (_mimeFormat == MimeFormat.Json)
             {
                 return (T) RedmineSerialization.JsonDeserialize(result, type, jsonRoot);
             }
-            return (T) RedmineSerialization.FromXML(result, type);
+            return (T) RedmineSerialization.FromXml(result, type);
         }
 
         private void ShowAsyncResult(
@@ -417,7 +417,7 @@ namespace Redmine.Net.Api
             var aev = new AsyncEventArgs();
             try
             {
-                if (mimeFormat == MimeFormat.json)
+                if (_mimeFormat == MimeFormat.Json)
                     if (method == RedmineMethod.GetObjectList)
                     {
                         int totalItems;
@@ -449,7 +449,7 @@ namespace Redmine.Net.Api
                     }
                 }
                 else
-                    aev.Result = RedmineSerialization.FromXML(response, responseType);
+                    aev.Result = RedmineSerialization.FromXml(response, responseType);
             }
             catch (ThreadAbortException ex)
             {

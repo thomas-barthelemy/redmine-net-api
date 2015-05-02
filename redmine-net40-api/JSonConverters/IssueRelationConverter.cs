@@ -30,18 +30,16 @@ namespace Redmine.Net.Api.JSonConverters
             Type type,
             JavaScriptSerializer serializer)
         {
-            if (dictionary != null)
+            if (dictionary == null) return null;
+            var issueRelation = new IssueRelation
             {
-                var issueRelation = new IssueRelation();
-                issueRelation.Id = dictionary.GetValue<int>("id");
-                issueRelation.IssueId = dictionary.GetValue<int>("issue_id");
-                issueRelation.IssueToId = dictionary.GetValue<int>("issue_to_id");
-                issueRelation.Type =
-                    dictionary.GetValue<IssueRelationType>("relation_type");
-                issueRelation.Delay = dictionary.GetValue<int?>("delay");
-                return issueRelation;
-            }
-            return null;
+                Id = dictionary.GetValue<int>("id"),
+                IssueId = dictionary.GetValue<int>("issue_id"),
+                IssueToId = dictionary.GetValue<int>("issue_to_id"),
+                Type = dictionary.GetValue<IssueRelationType>("relation_type"),
+                Delay = dictionary.GetValue<int?>("delay")
+            };
+            return issueRelation;
         }
 
         public override IDictionary<string, object> Serialize(
@@ -55,8 +53,8 @@ namespace Redmine.Net.Api.JSonConverters
             {
                 result.Add("issue_to_id", entity.IssueToId);
                 result.Add("relation_type", entity.Type.ToString());
-                if (entity.Type == IssueRelationType.precedes ||
-                    entity.Type == IssueRelationType.follows)
+                if (entity.Type == IssueRelationType.Precedes ||
+                    entity.Type == IssueRelationType.Follows)
                     result.WriteIfNotDefaultOrNull(entity.Delay, "delay");
                 root["relation"] = result;
                 return root;

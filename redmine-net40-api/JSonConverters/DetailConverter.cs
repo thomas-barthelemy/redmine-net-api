@@ -30,16 +30,15 @@ namespace Redmine.Net.Api.JSonConverters
             Type type,
             JavaScriptSerializer serializer)
         {
-            if (dictionary != null)
+            if (dictionary == null) return null;
+            var detail = new Detail
             {
-                var detail = new Detail();
-                detail.NewValue = dictionary.GetValue<string>("new_value");
-                detail.OldValue = dictionary.GetValue<string>("old_value");
-                detail.Property = dictionary.GetValue<string>("property");
-                detail.StatusId = dictionary.GetValue<string>("name");
-                return detail;
-            }
-            return null;
+                NewValue = dictionary.GetValue<string>("new_value"),
+                OldValue = dictionary.GetValue<string>("old_value"),
+                Property = dictionary.GetValue<string>("property"),
+                StatusId = dictionary.GetValue<string>("name")
+            };
+            return detail;
         }
 
         public override IDictionary<string, object> Serialize(

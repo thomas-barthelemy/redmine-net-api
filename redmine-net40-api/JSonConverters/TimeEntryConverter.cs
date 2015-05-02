@@ -31,30 +31,26 @@ namespace Redmine.Net.Api.JSonConverters
             Type type,
             JavaScriptSerializer serializer)
         {
-            if (dictionary != null)
+            if (dictionary == null) return null;
+            var timeEntry = new TimeEntry
             {
-                var timeEntry = new TimeEntry();
-                timeEntry.Id = dictionary.GetValue<int>("id");
-                timeEntry.Activity =
-                    dictionary.GetValueAsIdentifiableName(
-                        dictionary.ContainsKey("activity") ? "activity" : "activity_id");
-                timeEntry.Comments = dictionary.GetValue<string>("comments");
-                timeEntry.Hours = dictionary.GetValue<decimal>("hours");
-                timeEntry.Issue =
-                    dictionary.GetValueAsIdentifiableName(
-                        dictionary.ContainsKey("issue") ? "issue" : "issue_id");
-                timeEntry.Project =
-                    dictionary.GetValueAsIdentifiableName(
-                        dictionary.ContainsKey("project") ? "project" : "project_id");
-                timeEntry.SpentOn = dictionary.GetValue<DateTime?>("spent_on");
-                timeEntry.User = dictionary.GetValueAsIdentifiableName("user");
-                timeEntry.CustomFields =
-                    dictionary.GetValueAsCollection<IssueCustomField>("custom_fields");
-                timeEntry.CreatedOn = dictionary.GetValue<DateTime?>("created_on");
-                timeEntry.UpdatedOn = dictionary.GetValue<DateTime?>("updated_on");
-                return timeEntry;
-            }
-            return null;
+                Id = dictionary.GetValue<int>("id"),
+                Activity = dictionary.GetValueAsIdentifiableName(
+                    dictionary.ContainsKey("activity") ? "activity" : "activity_id"),
+                Comments = dictionary.GetValue<string>("comments"),
+                Hours = dictionary.GetValue<decimal>("hours"),
+                Issue = dictionary.GetValueAsIdentifiableName(
+                    dictionary.ContainsKey("issue") ? "issue" : "issue_id"),
+                Project = dictionary.GetValueAsIdentifiableName(
+                    dictionary.ContainsKey("project") ? "project" : "project_id"),
+                SpentOn = dictionary.GetValue<DateTime?>("spent_on"),
+                User = dictionary.GetValueAsIdentifiableName("user"),
+                CustomFields =
+                    dictionary.GetValueAsCollection<IssueCustomField>("custom_fields"),
+                CreatedOn = dictionary.GetValue<DateTime?>("created_on"),
+                UpdatedOn = dictionary.GetValue<DateTime?>("updated_on")
+            };
+            return timeEntry;
         }
 
         public override IDictionary<string, object> Serialize(
