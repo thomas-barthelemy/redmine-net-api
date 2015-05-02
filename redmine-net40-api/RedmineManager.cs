@@ -36,7 +36,7 @@ namespace Redmine.Net.Api
     /// <summary>
     ///     The main class to access Redmine API.
     /// </summary>
-    public class RedmineManager
+    public partial class RedmineManager
     {
         private const string REQUEST_FORMAT = "{0}/{1}/{2}.{3}";
         private const string FORMAT = "{0}/{1}.{2}";
