@@ -280,9 +280,6 @@
     <Compile Include="..\redmine-net40-api\RedmineManager.cs">
       <Link>RedmineManager.cs</Link>
     </Compile>
-    <Compile Include="..\redmine-net40-api\RedmineManagerAsync.cs">
-      <Link>RedmineManagerAsync.cs</Link>
-    </Compile>
     <Compile Include="..\redmine-net40-api\RedmineSerialization.cs">
       <Link>RedmineSerialization.cs</Link>
     </Compile>
