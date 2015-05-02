@@ -91,20 +91,20 @@ namespace Redmine.Net.Api
         /// <remarks>http://florianreischl.blogspot.ro/search/label/c%23</remarks>
         public class XmlStreamingSerializer<T>
         {
-            private static readonly XmlSerializerNamespaces ns;
-            private readonly XmlSerializer serializer = new XmlSerializer(typeof (T));
-            private readonly XmlWriter writer;
-            private bool finished;
+            private static readonly XmlSerializerNamespaces Ns;
+            private readonly XmlSerializer _serializer;
+            private readonly XmlWriter _writer;
+            private bool _finished;
 
             static XmlStreamingSerializer()
             {
-                ns = new XmlSerializerNamespaces();
-                ns.Add("", "");
+                Ns = new XmlSerializerNamespaces();
+                Ns.Add("", "");
             }
 
             private XmlStreamingSerializer()
             {
-                serializer = new XmlSerializer(typeof (T));
+                _serializer = new XmlSerializer(typeof (T));
             }
 
             public XmlStreamingSerializer(TextWriter w)
@@ -113,28 +113,28 @@ namespace Redmine.Net.Api
             public XmlStreamingSerializer(XmlWriter writer)
                 : this()
             {
-                this.writer = writer;
+                _writer = writer;
                 writer.WriteStartDocument();
                 writer.WriteStartElement("ArrayOf" + typeof (T).Name);
             }
 
             public void Finish()
             {
-                writer.WriteEndDocument();
-                writer.Flush();
-                finished = true;
+                _writer.WriteEndDocument();
+                _writer.Flush();
+                _finished = true;
             }
 
             public void Close()
             {
-                if (!finished)
+                if (!_finished)
                     Finish();
-                writer.Close();
+                _writer.Close();
             }
 
             public void Serialize(T item)
             {
-                serializer.Serialize(writer, item, ns);
+                _serializer.Serialize(_writer, item, Ns);
             }
         }
     }
