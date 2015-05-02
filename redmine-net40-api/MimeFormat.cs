@@ -16,9 +16,9 @@ limitations under the License.
 
 namespace Redmine.Net.Api
 {
-    public enum MimeFormat
+    public static class MimeFormat
     {
-        Xml,
-        Json
+        public const string XML = "xml";
+        public const string JSON = "json";
     }
 }

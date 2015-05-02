@@ -50,7 +50,7 @@ namespace Redmine.Net.Api
         private const string DELETE = "DELETE";
         private readonly CredentialCache _credentialCache;
         private readonly string _host, _apiKey, _basicAuthorization;
-        private readonly MimeFormat _mimeFormat;
+        private readonly string _mimeFormat;
 
         private readonly Dictionary<Type, string> _urls = new Dictionary<Type, string>
         {
@@ -84,7 +84,7 @@ namespace Redmine.Net.Api
         /// <param name="verifyServerCert">if set to <c>true</c> [verify server cert].</param>
         public RedmineManager(
             string host,
-            MimeFormat mimeFormat = MimeFormat.Xml,
+            string mimeFormat = MimeFormat.XML,
             bool verifyServerCert = true)
         {
             PageSize = 25;
@@ -122,7 +122,7 @@ namespace Redmine.Net.Api
         public RedmineManager(
             string host,
             string apiKey,
-            MimeFormat mimeFormat = MimeFormat.Xml,
+            string mimeFormat = MimeFormat.XML,
             bool verifyServerCert = true)
             : this(host, mimeFormat, verifyServerCert)
         {
@@ -152,7 +152,7 @@ namespace Redmine.Net.Api
             string host,
             string login,
             string password,
-            MimeFormat mimeFormat = MimeFormat.Xml,
+            string mimeFormat = MimeFormat.XML,
             bool verifyServerCert = true)
             : this(host, mimeFormat, verifyServerCert)
         {
@@ -247,7 +247,7 @@ namespace Redmine.Net.Api
                     issueId + "/watchers",
                     _mimeFormat),
                 POST,
-                _mimeFormat == MimeFormat.Xml
+                _mimeFormat == MimeFormat.XML
                     ? "<user_id>" + userId + "</user_id>"
                     : "user_id:" + userId,
                 "AddWatcher");
@@ -282,7 +282,7 @@ namespace Redmine.Net.Api
                     groupId + "/users",
                     _mimeFormat),
                 POST,
-                _mimeFormat == MimeFormat.Xml
+                _mimeFormat == MimeFormat.XML
                     ? "<user_id>" + userId + "</user_id>"
                     : "user_id:" + userId,
                 "AddUser");
@@ -752,7 +752,7 @@ namespace Redmine.Net.Api
                 webClient.Headers.Add("X-Redmine-Switch-User", ImpersonateUser);
             webClient.Headers.Add(
                 "Content-Type",
-                _mimeFormat == MimeFormat.Json
+                _mimeFormat == MimeFormat.JSON
                     ? "application/json; charset=utf-8"
                     : "application/xml; charset=utf-8");
             webClient.Encoding = Encoding.UTF8;
@@ -885,7 +885,7 @@ namespace Redmine.Net.Api
 
         private string Serialize<T>(T obj) where T : class, new()
         {
-            if (_mimeFormat == MimeFormat.Json)
+            if (_mimeFormat == MimeFormat.JSON)
                 return RedmineSerialization.JsonSerializer(obj);
             return RedmineSerialization.ToXml(obj);
         }
@@ -893,7 +893,7 @@ namespace Redmine.Net.Api
         private T Deserialize<T>(string response) where T : class, new()
         {
             var type = typeof (T);
-            if (_mimeFormat == MimeFormat.Json)
+            if (_mimeFormat == MimeFormat.JSON)
                 return type == typeof (IssueCategory)
                     ? RedmineSerialization.JsonDeserialize<T>(response, "issue_category")
                     : RedmineSerialization.JsonDeserialize<T>(
@@ -908,7 +908,7 @@ namespace Redmine.Net.Api
             out int totalCount) where T : class, new()
         {
             var type = typeof (T);
-            if (_mimeFormat == MimeFormat.Json)
+            if (_mimeFormat == MimeFormat.JSON)
             {
                 if (type == typeof (IssuePriority)) jsonRoot = "issue_priorities";
                 if (type == typeof (TimeEntryActivity))

@@ -175,7 +175,7 @@ namespace Redmine.Net.Api
                             groupId + "/users",
                             _mimeFormat)),
                     POST,
-                    _mimeFormat == MimeFormat.Xml
+                    _mimeFormat == MimeFormat.XML
                         ? "<user_id>" + userId + "</user_id>"
                         : "user_id:" + userId,
                     asyncToken);
@@ -379,7 +379,7 @@ namespace Redmine.Net.Api
             var type = typeof (T);
             if (type == typeof (List<T>))
             {
-                if (_mimeFormat == MimeFormat.Json)
+                if (_mimeFormat == MimeFormat.JSON)
                 {
                     return
                         (T)
@@ -401,7 +401,7 @@ namespace Redmine.Net.Api
                     }
                 }
             }
-            if (_mimeFormat == MimeFormat.Json)
+            if (_mimeFormat == MimeFormat.JSON)
             {
                 return (T) RedmineSerialization.JsonDeserialize(result, type, jsonRoot);
             }
@@ -417,7 +417,7 @@ namespace Redmine.Net.Api
             var aev = new AsyncEventArgs();
             try
             {
-                if (_mimeFormat == MimeFormat.Json)
+                if (_mimeFormat == MimeFormat.JSON)
                     if (method == RedmineMethod.GetObjectList)
                     {
                         int totalItems;
