@@ -16,43 +16,59 @@
 
 using System;
 using System.Xml;
-using System.Xml.Serialization;
 using System.Xml.Schema;
+using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
     /// <summary>
-    /// Availability 1.3
+    ///     Availability 1.3
     /// </summary>
     [XmlRoot("tracker")]
     public class Tracker : IXmlSerializable, IEquatable<Tracker>
     {
         /// <summary>
-        /// Gets or sets the id.
+        ///     Gets or sets the id.
         /// </summary>
         /// <value>
-        /// The id.
+        ///     The id.
         /// </value>
         [XmlElement("id")]
         public int Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the name.
+        ///     Gets or sets the name.
         /// </summary>
         /// <value>
-        /// The name.
+        ///     The name.
         /// </value>
         [XmlElement("name")]
         public string Name { get; set; }
 
-        public void WriteXml(XmlWriter writer) { }
+        /// <summary>
+        ///     Indicates whether the current object is equal to another object of the same type.
+        /// </summary>
+        /// <param name="other">An object to compare with this object.</param>
+        /// <returns>
+        ///     true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.
+        /// </returns>
+        public bool Equals(Tracker other)
+        {
+            if (other == null) return false;
+            return Id == other.Id && Name == other.Name;
+        }
 
-        public XmlSchema GetSchema() { return null; }
+        public void WriteXml(XmlWriter writer) {}
+
+        public XmlSchema GetSchema()
+        {
+            return null;
+        }
 
         /// <summary>
-        /// Generates an object from its XML representation.
+        ///     Generates an object from its XML representation.
         /// </summary>
-        /// <param name="reader">The <see cref="T:System.Xml.XmlReader"/> stream from which the object is deserialized.</param>
+        /// <param name="reader">The <see cref="T:System.Xml.XmlReader" /> stream from which the object is deserialized.</param>
         public virtual void ReadXml(XmlReader reader)
         {
             reader.Read();
@@ -63,30 +79,19 @@ namespace Redmine.Net.Api.Types
                     reader.Read();
                     continue;
                 }
-
                 switch (reader.Name)
                 {
-                    case "id": Id = reader.ReadElementContentAsInt(); break;
-
-                    case "name": Name = reader.ReadElementContentAsString(); break;
-
-                    default: reader.Read(); break;
+                    case "id":
+                        Id = reader.ReadElementContentAsInt();
+                        break;
+                    case "name":
+                        Name = reader.ReadElementContentAsString();
+                        break;
+                    default:
+                        reader.Read();
+                        break;
                 }
             }
-        }
-
-        /// <summary>
-        /// Indicates whether the current object is equal to another object of the same type.
-        /// </summary>
-        /// <param name="other">An object to compare with this object.</param>
-        /// <returns>
-        /// true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
-        /// </returns>
-        public bool Equals(Tracker other)
-        {
-            if (other == null) return false;
-
-            return Id == other.Id && Name == other.Name;
         }
 
         public override string ToString()

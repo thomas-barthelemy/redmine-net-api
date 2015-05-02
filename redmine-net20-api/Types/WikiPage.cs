@@ -23,7 +23,7 @@ using System.Xml.Serialization;
 namespace Redmine.Net.Api.Types
 {
     /// <summary>
-    /// Availability 2.2
+    ///     Availability 2.2
     /// </summary>
     [XmlRoot("wiki_page")]
     public class WikiPage : Identifiable<WikiPage>, IXmlSerializable, IEquatable<WikiPage>
@@ -44,32 +44,48 @@ namespace Redmine.Net.Api.Types
         public IdentifiableName Author { get; set; }
 
         /// <summary>
-        /// Gets or sets the created on.
+        ///     Gets or sets the created on.
         /// </summary>
         /// <value>The created on.</value>
         [XmlElement("created_on")]
         public DateTime? CreatedOn { get; set; }
 
         /// <summary>
-        /// Gets or sets the updated on.
+        ///     Gets or sets the updated on.
         /// </summary>
         /// <value>The updated on.</value>
         [XmlElement("updated_on")]
         public DateTime? UpdatedOn { get; set; }
 
         /// <summary>
-        /// Gets or sets the attachments.
+        ///     Gets or sets the attachments.
         /// </summary>
         /// <value>
-        /// The attachments.
+        ///     The attachments.
         /// </value>
         [XmlArray("attachments")]
         [XmlArrayItem("attachment")]
         public IList<Attachment> Attachments { get; set; }
 
+        #region Implementation of IEquatable<WikiPage>
+
+        public bool Equals(WikiPage other)
+        {
+            if (other == null) return false;
+            return Id == other.Id && Title == other.Title && Text == other.Text &&
+                   Comments == other.Comments && Version == other.Version &&
+                   Author == other.Author && CreatedOn == other.CreatedOn &&
+                   UpdatedOn == other.UpdatedOn;
+        }
+
+        #endregion
+
         #region Implementation of IXmlSerializable
 
-        public XmlSchema GetSchema() { return null; }
+        public XmlSchema GetSchema()
+        {
+            return null;
+        }
 
         public void ReadXml(XmlReader reader)
         {
@@ -81,28 +97,38 @@ namespace Redmine.Net.Api.Types
                     reader.Read();
                     continue;
                 }
-
                 switch (reader.Name)
                 {
-                    case "id": Id = reader.ReadElementContentAsInt(); break;
-
-                    case "title": Title = reader.ReadElementContentAsString(); break;
-
-                    case "text": Text = reader.ReadElementContentAsString(); break;
-                    
-                    case "comments": Comments = reader.ReadElementContentAsString(); break;
-
-                    case "version": Version = reader.ReadElementContentAsInt(); break;
-
-                    case "author": Author = new IdentifiableName(reader); break;
-
-                    case "created_on": CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
-
-                    case "updated_on": UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
-
-                    case "attachments": Attachments = reader.ReadElementContentAsCollection<Attachment>(); break;
-
-                    default: reader.Read(); break;
+                    case "id":
+                        Id = reader.ReadElementContentAsInt();
+                        break;
+                    case "title":
+                        Title = reader.ReadElementContentAsString();
+                        break;
+                    case "text":
+                        Text = reader.ReadElementContentAsString();
+                        break;
+                    case "comments":
+                        Comments = reader.ReadElementContentAsString();
+                        break;
+                    case "version":
+                        Version = reader.ReadElementContentAsInt();
+                        break;
+                    case "author":
+                        Author = new IdentifiableName(reader);
+                        break;
+                    case "created_on":
+                        CreatedOn = reader.ReadElementContentAsNullableDateTime();
+                        break;
+                    case "updated_on":
+                        UpdatedOn = reader.ReadElementContentAsNullableDateTime();
+                        break;
+                    case "attachments":
+                        Attachments = reader.ReadElementContentAsCollection<Attachment>();
+                        break;
+                    default:
+                        reader.Read();
+                        break;
                 }
             }
         }
@@ -111,18 +137,7 @@ namespace Redmine.Net.Api.Types
         {
             writer.WriteElementString("text", Text);
             writer.WriteElementString("comments", Comments);
-            writer.WriteIfNotDefaultOrNull<int>(Version,"version");
-        }
-
-        #endregion
-
-        #region Implementation of IEquatable<WikiPage>
-
-        public bool Equals(WikiPage other)
-        {
-            if (other == null) return false;
-
-            return Id == other.Id && Title == other.Title && Text == other.Text && Comments == other.Comments && Version == other.Version && Author == other.Author && CreatedOn == other.CreatedOn && UpdatedOn == other.UpdatedOn;
+            writer.WriteIfNotDefaultOrNull<int>(Version, "version");
         }
 
         #endregion

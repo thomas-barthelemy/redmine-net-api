@@ -16,56 +16,55 @@
 
 using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 using System.Xml;
 using System.Xml.Serialization;
 
 namespace Redmine.Net.Api.Types
 {
     /// <summary>
-    /// Availability 1.0
+    ///     Availability 1.0
     /// </summary>
     [XmlRoot("project")]
     // [DataContract(Name = "project")]
     public class Project : IdentifiableName, IEquatable<Project>
     {
         /// <summary>
-        /// Gets or sets the identifier.
+        ///     Gets or sets the identifier.
         /// </summary>
         /// <value>The identifier.</value>
         [XmlElement("identifier")]
-        public String Identifier { get; set; }
+        public string Identifier { get; set; }
 
         /// <summary>
-        /// Gets or sets the description.
+        ///     Gets or sets the description.
         /// </summary>
         /// <value>The description.</value>
         [XmlElement("description")]
-        public String Description { get; set; }
+        public string Description { get; set; }
 
         /// <summary>
-        /// Gets or sets the parent.
+        ///     Gets or sets the parent.
         /// </summary>
         /// <value>The parent.</value>
         [XmlElement("parent")]
         public IdentifiableName Parent { get; set; }
 
         /// <summary>
-        /// Gets or sets the home page.
+        ///     Gets or sets the home page.
         /// </summary>
         /// <value>The home page.</value>
         [XmlElement("homepage")]
-        public String HomePage { get; set; }
+        public string HomePage { get; set; }
 
         /// <summary>
-        /// Gets or sets the created on.
+        ///     Gets or sets the created on.
         /// </summary>
         /// <value>The created on.</value>
         [XmlElement("created_on")]
         public DateTime? CreatedOn { get; set; }
 
         /// <summary>
-        /// Gets or sets the updated on.
+        ///     Gets or sets the updated on.
         /// </summary>
         /// <value>The updated on.</value>
         [XmlElement("updated_on")]
@@ -75,10 +74,10 @@ namespace Redmine.Net.Api.Types
         public ProjectStatus Status { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this project is public.
+        ///     Gets or sets a value indicating whether this project is public.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if this project is public; otherwise, <c>false</c>.
+        ///     <c>true</c> if this project is public; otherwise, <c>false</c>.
         /// </value>
         /// <remarks> is exposed since 2.6.0</remarks>
         [XmlElement("is_public")]
@@ -88,10 +87,10 @@ namespace Redmine.Net.Api.Types
         public bool InheritMembers { get; set; }
 
         /// <summary>
-        /// Gets or sets the trackers.
+        ///     Gets or sets the trackers.
         /// </summary>
         /// <value>
-        /// The trackers.
+        ///     The trackers.
         /// </value>
         [XmlArray("trackers")]
         [XmlArrayItem("tracker")]
@@ -106,14 +105,21 @@ namespace Redmine.Net.Api.Types
         public IList<ProjectIssueCategory> IssueCategories { get; set; }
 
         /// <summary>
-        /// enabled_module_names: (repeatable element) the module name: boards, calendar, documents, files, gantt, issue_tracking, news, repository, time_tracking, wiki
+        ///     enabled_module_names: (repeatable element) the module name: boards, calendar, documents, files, gantt,
+        ///     issue_tracking, news, repository, time_tracking, wiki
         /// </summary>
         public string EnabledModuleNames { get; set; }
 
+        public bool Equals(Project other)
+        {
+            if (other == null) return false;
+            return (Id == other.Id && Identifier == other.Identifier);
+        }
+
         /// <summary>
-        /// Generates an object from its XML representation.
+        ///     Generates an object from its XML representation.
         /// </summary>
-        /// <param name="reader">The <see cref="T:System.Xml.XmlReader"/> stream from which the object is deserialized.</param>
+        /// <param name="reader">The <see cref="T:System.Xml.XmlReader" /> stream from which the object is deserialized.</param>
         public override void ReadXml(XmlReader reader)
         {
             reader.Read();
@@ -124,37 +130,55 @@ namespace Redmine.Net.Api.Types
                     reader.Read();
                     continue;
                 }
-
                 switch (reader.Name)
                 {
-                    case "id": Id = reader.ReadElementContentAsInt(); break;
-
-                    case "name": Name = reader.ReadElementContentAsString(); break;
-
-                    case "identifier": Identifier = reader.ReadElementContentAsString(); break;
-
-                    case "description": Description = reader.ReadElementContentAsString(); break;
-
-                    case "status": Status = (ProjectStatus)reader.ReadElementContentAsInt(); break;
-
-                    case "parent": Parent = new IdentifiableName(reader); break;
-
-                    case "homepage": HomePage = reader.ReadElementContentAsString(); break;
-
-                    case "is_public": IsPublic = reader.ReadElementContentAsBoolean(); break;
-
-                    case "inherit_members": InheritMembers = reader.ReadElementContentAsBoolean(); break;
-
-                    case "created_on": CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
-
-                    case "updated_on": UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
-
-                    case "trackers": Trackers = reader.ReadElementContentAsCollection<ProjectTracker>(); break;
-
-                    case "custom_fields": CustomFields = reader.ReadElementContentAsCollection<IssueCustomField>(); break;
-
-                    case "issue_categories": IssueCategories = reader.ReadElementContentAsCollection<ProjectIssueCategory>(); break;
-                    default: reader.Read(); break;
+                    case "id":
+                        Id = reader.ReadElementContentAsInt();
+                        break;
+                    case "name":
+                        Name = reader.ReadElementContentAsString();
+                        break;
+                    case "identifier":
+                        Identifier = reader.ReadElementContentAsString();
+                        break;
+                    case "description":
+                        Description = reader.ReadElementContentAsString();
+                        break;
+                    case "status":
+                        Status = (ProjectStatus) reader.ReadElementContentAsInt();
+                        break;
+                    case "parent":
+                        Parent = new IdentifiableName(reader);
+                        break;
+                    case "homepage":
+                        HomePage = reader.ReadElementContentAsString();
+                        break;
+                    case "is_public":
+                        IsPublic = reader.ReadElementContentAsBoolean();
+                        break;
+                    case "inherit_members":
+                        InheritMembers = reader.ReadElementContentAsBoolean();
+                        break;
+                    case "created_on":
+                        CreatedOn = reader.ReadElementContentAsNullableDateTime();
+                        break;
+                    case "updated_on":
+                        UpdatedOn = reader.ReadElementContentAsNullableDateTime();
+                        break;
+                    case "trackers":
+                        Trackers = reader.ReadElementContentAsCollection<ProjectTracker>();
+                        break;
+                    case "custom_fields":
+                        CustomFields =
+                            reader.ReadElementContentAsCollection<IssueCustomField>();
+                        break;
+                    case "issue_categories":
+                        IssueCategories =
+                            reader.ReadElementContentAsCollection<ProjectIssueCategory>();
+                        break;
+                    default:
+                        reader.Read();
+                        break;
                 }
             }
         }
@@ -168,21 +192,17 @@ namespace Redmine.Net.Api.Types
             writer.WriteElementString("is_public", IsPublic.ToString());
             writer.WriteIdIfNotNull(Parent, "parent_id");
             writer.WriteElementString("homepage", HomePage);
-
             if (!string.IsNullOrEmpty(EnabledModuleNames))
             {
-               var tokens= EnabledModuleNames.Split(",", StringSplitOptions.RemoveEmptyEntries);
-               if (tokens != null)
-               {
-                   foreach (var token in tokens)
-                   {
-                       writer.WriteElementString("enabled_module_names", token);
-                   }
-               }
+                var tokens = EnabledModuleNames.Split(
+                    ",".ToCharArray(),
+                    StringSplitOptions.RemoveEmptyEntries);
+                foreach (var token in tokens)
+                {
+                    writer.WriteElementString("enabled_module_names", token);
+                }
             }
-
             if (Id == 0) return;
-
             if (CustomFields != null)
             {
                 writer.WriteStartElement("custom_fields");
@@ -193,12 +213,6 @@ namespace Redmine.Net.Api.Types
                 }
                 writer.WriteEndElement();
             }
-        }
-
-        public bool Equals(Project other)
-        {
-            if (other == null) return false;
-            return (Id == other.Id && Identifier == other.Identifier);
         }
     }
 }

@@ -19,15 +19,15 @@ using System.Xml.Serialization;
 namespace Redmine.Net.Api.Types
 {
     /// <summary>
-    /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class Identifiable<T> where T : Identifiable<T>
+    public abstract class Identifiable<T>
+        where T : Identifiable<T>
     {
         private int? oldHashCode;
 
         /// <summary>
-        /// Gets or sets the id.
+        ///     Gets or sets the id.
         /// </summary>
         /// <value>The id.</value>
         [XmlAttribute("id")]
@@ -37,13 +37,10 @@ namespace Redmine.Net.Api.Types
         {
             var other = obj as T;
             if (other == null) return false;
-
             var thisIsNew = Equals(Id, default(int));
             var otherIsNew = Equals(other.Id, default(int));
-
             if (thisIsNew && otherIsNew)
                 return ReferenceEquals(this, other);
-
             return Id.Equals(other.Id);
         }
 
@@ -51,7 +48,6 @@ namespace Redmine.Net.Api.Types
         {
             if (oldHashCode.HasValue)
                 return oldHashCode.Value;
-
             var thisIsNew = Equals(Id, default(int));
             if (thisIsNew)
             {

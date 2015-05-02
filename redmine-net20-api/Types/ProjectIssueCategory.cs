@@ -20,7 +20,6 @@ using System.Xml.Serialization;
 namespace Redmine.Net.Api.Types
 {
     /// <summary>
-    /// 
     /// </summary>
     [XmlRoot("issue_category")]
     public class ProjectIssueCategory : IdentifiableName, IEquatable<ProjectTracker>

@@ -23,19 +23,18 @@ using System.Xml.Serialization;
 namespace Redmine.Net.Api.Types
 {
     /// <summary>
-    /// 
     /// </summary>
-    public class IdentifiableName : Identifiable<IdentifiableName>, IXmlSerializable, IEquatable<IdentifiableName>
+    public class IdentifiableName : Identifiable<IdentifiableName>,
+        IXmlSerializable,
+        IEquatable<IdentifiableName>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="IdentifiableName"/> class.
+        ///     Initializes a new instance of the <see cref="IdentifiableName" /> class.
         /// </summary>
-        public IdentifiableName()
-        {
-        }
+        public IdentifiableName() {}
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="IdentifiableName"/> class.
+        ///     Initializes a new instance of the <see cref="IdentifiableName" /> class.
         /// </summary>
         /// <param name="reader">The reader.</param>
         public IdentifiableName(XmlReader reader)
@@ -44,13 +43,22 @@ namespace Redmine.Net.Api.Types
         }
 
         /// <summary>
-        /// Gets or sets the name.
+        ///     Gets or sets the name.
         /// </summary>
         /// <value>The name.</value>
         [XmlAttribute("name")]
-        public String Name { get; set; }
+        public string Name { get; set; }
 
-        public XmlSchema GetSchema() { return null; }
+        public bool Equals(IdentifiableName other)
+        {
+            if (other == null) return false;
+            return (Id == other.Id && Name == other.Name);
+        }
+
+        public XmlSchema GetSchema()
+        {
+            return null;
+        }
 
         public virtual void ReadXml(XmlReader reader)
         {
@@ -68,12 +76,6 @@ namespace Redmine.Net.Api.Types
         public override string ToString()
         {
             return Id + ", " + Name;
-        }
-
-        public bool Equals(IdentifiableName other)
-        {
-            if (other == null) return false;
-            return (Id == other.Id && Name == other.Name);
         }
     }
 }

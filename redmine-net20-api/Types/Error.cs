@@ -21,17 +21,15 @@ using System.Xml.Serialization;
 namespace Redmine.Net.Api.Types
 {
     [XmlRoot("error")]
-    public class Error: IXmlSerializable
+    public class Error : IXmlSerializable
     {
         [XmlText]
         public string Info { get; set; }
 
-        public override string ToString()
+        public XmlSchema GetSchema()
         {
-            return Info;
+            return null;
         }
-
-        public XmlSchema GetSchema() { return null; }
 
         public void ReadXml(XmlReader reader)
         {
@@ -43,16 +41,23 @@ namespace Redmine.Net.Api.Types
                     reader.Read();
                     continue;
                 }
-
                 switch (reader.Name)
                 {
-                    case "error": Info = reader.ReadElementContentAsString(); break;
-
-                    default: reader.Read(); break;
+                    case "error":
+                        Info = reader.ReadElementContentAsString();
+                        break;
+                    default:
+                        reader.Read();
+                        break;
                 }
             }
         }
 
-        public void WriteXml(XmlWriter writer) { }
+        public void WriteXml(XmlWriter writer) {}
+
+        public override string ToString()
+        {
+            return Info;
+        }
     }
 }

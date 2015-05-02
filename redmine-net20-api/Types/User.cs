@@ -23,83 +23,83 @@ using System.Xml.Serialization;
 namespace Redmine.Net.Api.Types
 {
     /// <summary>
-    /// Availability 1.1
+    ///     Availability 1.1
     /// </summary>
     [XmlRoot("user")]
     public class User : Identifiable<User>, IXmlSerializable, IEquatable<User>
     {
         /// <summary>
-        /// Gets or sets the user login.
+        ///     Gets or sets the user login.
         /// </summary>
         /// <value>The login.</value>
         [XmlElement("login")]
-        public String Login { get; set; }
+        public string Login { get; set; }
 
         /// <summary>
-        /// Gets or sets the user password.
+        ///     Gets or sets the user password.
         /// </summary>
         /// <value>The password.</value>
         [XmlElement("password")]
         public string Password { get; set; }
 
         /// <summary>
-        /// Gets or sets the first name.
+        ///     Gets or sets the first name.
         /// </summary>
         /// <value>The first name.</value>
         [XmlElement("firstname")]
-        public String FirstName { get; set; }
+        public string FirstName { get; set; }
 
         /// <summary>
-        /// Gets or sets the last name.
+        ///     Gets or sets the last name.
         /// </summary>
         /// <value>The last name.</value>
         [XmlElement("lastname")]
-        public String LastName { get; set; }
+        public string LastName { get; set; }
 
         /// <summary>
-        /// Gets or sets the email.
+        ///     Gets or sets the email.
         /// </summary>
         /// <value>The email.</value>
         [XmlElement("mail")]
-        public String Email { get; set; }
+        public string Email { get; set; }
 
         /// <summary>
-        /// Gets or sets the authentication mode id.
+        ///     Gets or sets the authentication mode id.
         /// </summary>
         /// <value>
-        /// The authentication mode id.
+        ///     The authentication mode id.
         /// </value>
         [XmlElement("auth_source_id")]
-        public Int32? AuthenticationModeId { get; set; }
+        public int? AuthenticationModeId { get; set; }
 
         /// <summary>
-        /// Gets or sets the created on.
+        ///     Gets or sets the created on.
         /// </summary>
         /// <value>The created on.</value>
         [XmlElement("created_on")]
         public DateTime? CreatedOn { get; set; }
 
         /// <summary>
-        /// Gets or sets the last login on.
+        ///     Gets or sets the last login on.
         /// </summary>
         /// <value>The last login on.</value>
         [XmlElement("last_login_on")]
         public DateTime? LastLoginOn { get; set; }
 
         /// <summary>
-        /// Gets the API key of the user, visible for admins and for yourself (added in 2.3.0)
+        ///     Gets the API key of the user, visible for admins and for yourself (added in 2.3.0)
         /// </summary>
         [XmlElement("api_key")]
         public string ApiKey { get; set; }
 
         /// <summary>
-        /// Gets the status of the user, visible for admins only (added in 2.4.0)
+        ///     Gets the status of the user, visible for admins only (added in 2.4.0)
         /// </summary>
         [XmlElement("status")]
         public UserStatus Status { get; set; }
 
         /// <summary>
-        /// Gets or sets the custom fields.
+        ///     Gets or sets the custom fields.
         /// </summary>
         /// <value>The custom fields.</value>
         [XmlArray("custom_fields")]
@@ -107,24 +107,36 @@ namespace Redmine.Net.Api.Types
         public List<IssueCustomField> CustomFields { get; set; }
 
         /// <summary>
-        /// Gets or sets the memberships.
+        ///     Gets or sets the memberships.
         /// </summary>
         /// <value>
-        /// The memberships.
+        ///     The memberships.
         /// </value>
         [XmlArray("memberships")]
         [XmlArrayItem("membership")]
         public List<Membership> Memberships { get; set; }
 
         /// <summary>
-        /// Gets or sets the user's groups.
+        ///     Gets or sets the user's groups.
         /// </summary>
         /// <value>
-        /// The groups.
+        ///     The groups.
         /// </value>
         [XmlArray("groups")]
         [XmlArrayItem("group")]
         public List<UserGroup> Groups { get; set; }
+
+        public bool Equals(User other)
+        {
+            if (other == null) return false;
+            return (Id == other.Id && Login == other.Login && Password == other.Password
+                    && FirstName == other.FirstName && LastName == other.LastName &&
+                    Email == other.Email
+                    && CreatedOn == other.CreatedOn && LastLoginOn == other.LastLoginOn
+                    && CustomFields == other.CustomFields &&
+                    Memberships == other.Memberships
+                    && Groups == other.Groups && ApiKey == other.ApiKey);
+        }
 
         public XmlSchema GetSchema()
         {
@@ -141,36 +153,51 @@ namespace Redmine.Net.Api.Types
                     reader.Read();
                     continue;
                 }
-
                 switch (reader.Name)
                 {
-                    case "id": Id = reader.ReadElementContentAsInt(); break;
-
-                    case "login": Login = reader.ReadElementContentAsString(); break;
-
-                    case "firstname": FirstName = reader.ReadElementContentAsString(); break;
-
-                    case "lastname": LastName = reader.ReadElementContentAsString(); break;
-
-                    case "mail": Email = reader.ReadElementContentAsString(); break;
-
-                    case "auth_source_id": AuthenticationModeId = reader.ReadElementContentAsNullableInt(); break;
-
-                    case "last_login_on": LastLoginOn = reader.ReadElementContentAsNullableDateTime(); break;
-
-                    case "created_on": CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
-
-                    case "api_key": ApiKey = reader.ReadElementContentAsString(); break;
-
-                    case "status":Status = (UserStatus)reader.ReadElementContentAsInt(); break;
-
-                    case "custom_fields": CustomFields = reader.ReadElementContentAsCollection<IssueCustomField>(); break;
-
-                    case "memberships": Memberships = reader.ReadElementContentAsCollection<Membership>(); break;
-
-                    case "groups": Groups = reader.ReadElementContentAsCollection<UserGroup>(); break;
-
-                    default: reader.Read(); break;
+                    case "id":
+                        Id = reader.ReadElementContentAsInt();
+                        break;
+                    case "login":
+                        Login = reader.ReadElementContentAsString();
+                        break;
+                    case "firstname":
+                        FirstName = reader.ReadElementContentAsString();
+                        break;
+                    case "lastname":
+                        LastName = reader.ReadElementContentAsString();
+                        break;
+                    case "mail":
+                        Email = reader.ReadElementContentAsString();
+                        break;
+                    case "auth_source_id":
+                        AuthenticationModeId = reader.ReadElementContentAsNullableInt();
+                        break;
+                    case "last_login_on":
+                        LastLoginOn = reader.ReadElementContentAsNullableDateTime();
+                        break;
+                    case "created_on":
+                        CreatedOn = reader.ReadElementContentAsNullableDateTime();
+                        break;
+                    case "api_key":
+                        ApiKey = reader.ReadElementContentAsString();
+                        break;
+                    case "status":
+                        Status = (UserStatus) reader.ReadElementContentAsInt();
+                        break;
+                    case "custom_fields":
+                        CustomFields =
+                            reader.ReadElementContentAsCollection<IssueCustomField>();
+                        break;
+                    case "memberships":
+                        Memberships = reader.ReadElementContentAsCollection<Membership>();
+                        break;
+                    case "groups":
+                        Groups = reader.ReadElementContentAsCollection<UserGroup>();
+                        break;
+                    default:
+                        reader.Read();
+                        break;
                 }
             }
         }
@@ -183,7 +210,6 @@ namespace Redmine.Net.Api.Types
             writer.WriteElementString("mail", Email);
             writer.WriteElementString("password", Password);
             writer.WriteElementString("auth_source_id", AuthenticationModeId.ToString());
-
             if (CustomFields != null)
             {
                 writer.WriteStartElement("custom_fields");
@@ -194,16 +220,6 @@ namespace Redmine.Net.Api.Types
                 }
                 writer.WriteEndElement();
             }
-        }
-
-        public bool Equals(User other)
-        {
-            if (other == null) return false;
-            return (Id == other.Id && Login == other.Login && Password == other.Password
-                && FirstName == other.FirstName && LastName == other.LastName && Email == other.Email
-                && CreatedOn == other.CreatedOn && LastLoginOn == other.LastLoginOn
-                && CustomFields == other.CustomFields && Memberships == other.Memberships
-                && Groups == other.Groups && ApiKey == other.ApiKey);
         }
     }
 }

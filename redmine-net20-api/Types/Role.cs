@@ -23,40 +23,49 @@ using System.Xml.Serialization;
 namespace Redmine.Net.Api.Types
 {
     /// <summary>
-    /// Availability 1.4
+    ///     Availability 1.4
     /// </summary>
     [XmlRoot("role")]
     public class Role : IXmlSerializable, IEquatable<Role>
     {
         /// <summary>
-        /// Gets or sets the id.
+        ///     Gets or sets the id.
         /// </summary>
         /// <value>
-        /// The id.
+        ///     The id.
         /// </value>
         [XmlElement("id")]
         public int Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the name.
+        ///     Gets or sets the name.
         /// </summary>
         /// <value>
-        /// The name.
+        ///     The name.
         /// </value>
         [XmlElement("name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the permissions.
+        ///     Gets or sets the permissions.
         /// </summary>
         /// <value>
-        /// The issue relations.
+        ///     The issue relations.
         /// </value>
         [XmlArray("permissions")]
         [XmlArrayItem("permission")]
         public IList<Permission> Permissions { get; set; }
 
-        public XmlSchema GetSchema(){return null;}
+        public bool Equals(Role other)
+        {
+            if (other == null) return false;
+            return Id == other.Id && Name == other.Name;
+        }
+
+        public XmlSchema GetSchema()
+        {
+            return null;
+        }
 
         public void ReadXml(XmlReader reader)
         {
@@ -68,27 +77,25 @@ namespace Redmine.Net.Api.Types
                     reader.Read();
                     continue;
                 }
-
                 switch (reader.Name)
                 {
-                    case "id": Id = reader.ReadElementContentAsInt(); break;
-
-                    case "name": Name = reader.ReadElementContentAsString(); break;
-
-                    case "permissions": Permissions = reader.ReadElementContentAsCollection<Permission>(); break;
-
-                    default: reader.Read(); break;
+                    case "id":
+                        Id = reader.ReadElementContentAsInt();
+                        break;
+                    case "name":
+                        Name = reader.ReadElementContentAsString();
+                        break;
+                    case "permissions":
+                        Permissions = reader.ReadElementContentAsCollection<Permission>();
+                        break;
+                    default:
+                        reader.Read();
+                        break;
                 }
             }
         }
 
-        public void WriteXml(XmlWriter writer){}
-
-        public bool Equals(Role other)
-        {
-            if (other == null) return false;
-            return Id == other.Id && Name == other.Name;
-        }
+        public void WriteXml(XmlWriter writer) {}
 
         public override string ToString()
         {

@@ -76,7 +76,25 @@ namespace Redmine.Net.Api.Types
         [XmlArrayItem("role")]
         public IList<Role> Roles { get; set; }
 
-        public XmlSchema GetSchema() { return null; }
+        public bool Equals(CustomField other)
+        {
+            if (other == null) return false;
+            return (Id == other.Id && Name == other.Name && Multiple == other.Multiple &&
+                    IsFilter == other.IsFilter && IsRequired == other.IsRequired
+                    && Searchable == other.Searchable && Visible == other.Visible
+                    && CustomizedType == other.CustomizedType &&
+                    DefaultValue == other.DefaultValue
+                    && FieldFormat == other.FieldFormat && MaxLength == other.MaxLength &&
+                    MinLength == other.MinLength && Regexp == other.Regexp
+                    && Equals(Roles, other.Roles)
+                    && Equals(Trackers, other.Trackers)
+                    && Equals(PossibleValues, other.PossibleValues));
+        }
+
+        public XmlSchema GetSchema()
+        {
+            return null;
+        }
 
         public void ReadXml(XmlReader reader)
         {
@@ -88,61 +106,67 @@ namespace Redmine.Net.Api.Types
                     reader.Read();
                     continue;
                 }
-
                 switch (reader.Name)
                 {
-                    case "id": Id = reader.ReadElementContentAsInt(); break;
-
-                    case "name": Name = reader.ReadElementContentAsString(); break;
-
-                    case "customized_type": CustomizedType = reader.ReadElementContentAsString(); break;
-
-                    case "field_format": FieldFormat = reader.ReadElementContentAsString(); break;
-
-                    case "regexp": Regexp = reader.ReadElementContentAsString(); break;
-
-                    case "min_length": MinLength = reader.ReadElementContentAsNullableInt(); break;
-
-                    case "max_length": MaxLength = reader.ReadElementContentAsNullableInt(); break;
-
-                    case "is_required": IsRequired = reader.ReadElementContentAsBoolean(); break;
-
-                    case "is_filter": IsFilter = reader.ReadElementContentAsBoolean(); break;
-
-                    case "searchable": Searchable = reader.ReadElementContentAsBoolean(); break;
-
-                    case "visible": Visible = reader.ReadElementContentAsBoolean(); break;
-
-                    case "default_value": DefaultValue = reader.ReadElementContentAsString(); break;
-
-                    case "multiple": Multiple = reader.ReadElementContentAsBoolean(); break;
-
-                    case "trackers":
-                        Trackers = reader.ReadElementContentAsCollection<TrackerCustomField>();
+                    case "id":
+                        Id = reader.ReadElementContentAsInt();
                         break;
-
+                    case "name":
+                        Name = reader.ReadElementContentAsString();
+                        break;
+                    case "customized_type":
+                        CustomizedType = reader.ReadElementContentAsString();
+                        break;
+                    case "field_format":
+                        FieldFormat = reader.ReadElementContentAsString();
+                        break;
+                    case "regexp":
+                        Regexp = reader.ReadElementContentAsString();
+                        break;
+                    case "min_length":
+                        MinLength = reader.ReadElementContentAsNullableInt();
+                        break;
+                    case "max_length":
+                        MaxLength = reader.ReadElementContentAsNullableInt();
+                        break;
+                    case "is_required":
+                        IsRequired = reader.ReadElementContentAsBoolean();
+                        break;
+                    case "is_filter":
+                        IsFilter = reader.ReadElementContentAsBoolean();
+                        break;
+                    case "searchable":
+                        Searchable = reader.ReadElementContentAsBoolean();
+                        break;
+                    case "visible":
+                        Visible = reader.ReadElementContentAsBoolean();
+                        break;
+                    case "default_value":
+                        DefaultValue = reader.ReadElementContentAsString();
+                        break;
+                    case "multiple":
+                        Multiple = reader.ReadElementContentAsBoolean();
+                        break;
+                    case "trackers":
+                        Trackers =
+                            reader.ReadElementContentAsCollection<TrackerCustomField>();
+                        break;
                     case "roles":
                         Roles = reader.ReadElementContentAsCollection<Role>();
                         break;
-                    case "possible_values": PossibleValues = reader.ReadElementContentAsCollection<CustomFieldPossibleValue>(); break;
-
-                    default: reader.Read(); break;
+                    case "possible_values":
+                        PossibleValues =
+                            reader
+                                .ReadElementContentAsCollection<CustomFieldPossibleValue>(
+                                    );
+                        break;
+                    default:
+                        reader.Read();
+                        break;
                 }
             }
         }
 
-        public void WriteXml(XmlWriter writer) { }
-
-        public bool Equals(CustomField other)
-        {
-            if (other == null) return false;
-            return (Id == other.Id && Name == other.Name && Multiple == other.Multiple && IsFilter == other.IsFilter && IsRequired == other.IsRequired
-                && Searchable == other.Searchable && Visible == other.Visible
-                && CustomizedType == other.CustomizedType && DefaultValue == other.DefaultValue
-                && FieldFormat == other.FieldFormat && MaxLength == other.MaxLength && MinLength == other.MinLength && Regexp == other.Regexp
-                && Equals(Roles, other.Roles)
-                && Equals(Trackers, other.Trackers)
-                && Equals(PossibleValues, other.PossibleValues));
-        }
+        public void WriteXml(XmlWriter writer) {}
     }
 }

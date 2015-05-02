@@ -20,7 +20,6 @@ using System.Xml.Serialization;
 namespace Redmine.Net.Api.Types
 {
     /// <summary>
-    /// 
     /// </summary>
     [XmlRoot("tracker")]
     public class ProjectTracker : IdentifiableName, IEquatable<ProjectTracker>

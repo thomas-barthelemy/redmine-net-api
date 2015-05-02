@@ -22,34 +22,36 @@ using System.Xml.Serialization;
 namespace Redmine.Net.Api.Types
 {
     /// <summary>
-    /// Availability 1.3
+    ///     Availability 1.3
     /// </summary>
     [XmlRoot("issue_category")]
-    public class IssueCategory : Identifiable<IssueCategory>, IEquatable<IssueCategory>, IXmlSerializable
+    public class IssueCategory : Identifiable<IssueCategory>,
+        IEquatable<IssueCategory>,
+        IXmlSerializable
     {
         /// <summary>
-        /// Gets or sets the project.
+        ///     Gets or sets the project.
         /// </summary>
         /// <value>
-        /// The project.
+        ///     The project.
         /// </value>
         [XmlElement("project ")]
         public IdentifiableName Project { get; set; }
 
         /// <summary>
-        /// Gets or sets the asign to.
+        ///     Gets or sets the asign to.
         /// </summary>
         /// <value>
-        /// The asign to.
+        ///     The asign to.
         /// </value>
         [XmlElement("assigned_to")]
         public IdentifiableName AsignTo { get; set; }
 
         /// <summary>
-        /// Gets or sets the name.
+        ///     Gets or sets the name.
         /// </summary>
         /// <value>
-        /// The name.
+        ///     The name.
         /// </value>
         [XmlElement("name")]
         public string Name { get; set; }
@@ -57,10 +59,14 @@ namespace Redmine.Net.Api.Types
         public bool Equals(IssueCategory other)
         {
             if (other == null) return false;
-            return (Id == other.Id && Project == other.Project && AsignTo == other.AsignTo && Name == other.Name);
+            return (Id == other.Id && Project == other.Project && AsignTo == other.AsignTo &&
+                    Name == other.Name);
         }
 
-        public XmlSchema GetSchema() { return null; }
+        public XmlSchema GetSchema()
+        {
+            return null;
+        }
 
         public void ReadXml(XmlReader reader)
         {
@@ -72,18 +78,23 @@ namespace Redmine.Net.Api.Types
                     reader.Read();
                     continue;
                 }
-
                 switch (reader.Name)
                 {
-                    case "id": Id = reader.ReadElementContentAsInt(); break;
-
-                    case "project": Project = new IdentifiableName(reader); break;
-
-                    case "assigned_to": AsignTo = new IdentifiableName(reader); break;
-
-                    case "name": Name = reader.ReadElementContentAsString(); break;
-
-                    default: reader.Read(); break;
+                    case "id":
+                        Id = reader.ReadElementContentAsInt();
+                        break;
+                    case "project":
+                        Project = new IdentifiableName(reader);
+                        break;
+                    case "assigned_to":
+                        AsignTo = new IdentifiableName(reader);
+                        break;
+                    case "name":
+                        Name = reader.ReadElementContentAsString();
+                        break;
+                    default:
+                        reader.Read();
+                        break;
                 }
             }
         }
